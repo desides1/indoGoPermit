@@ -90,7 +90,7 @@ https://templatemo.com/tm-590-topic-listing
         </nav>
 
 
-        <section>
+        <section id="section_1">
             <div class="header">
                 <!--Content before waves-->
                 <div class="inner-header flex justify-center row align-items-center">
@@ -168,16 +168,16 @@ https://templatemo.com/tm-590-topic-listing
                                             <a href="topics-detail.html">
                                                 <div class="d-flex">
                                                     <div>
-                                                        <h5 class="mb-2">Web Design</h5>
+                                                        <h5 class="mb-2">Perizinan Kesehatan & Kecantikan</h5>
 
-                                                        <p class="mb-0">Topic Listing Template based on Bootstrap 5
+                                                        <p class="mb-0">untuk operasional fasilitas medis, klinik,
+                                                            atau usaha di bidang kecantikan sesuai regulasi yang
+                                                            berlaku.
                                                         </p>
                                                     </div>
-
-                                                    <span class="badge bg-design rounded-pill ms-auto">14</span>
                                                 </div>
 
-                                                <img src="images/topics/undraw_Remote_design_team_re_urdx.png"
+                                                <img src="{{ asset('images/hospita.png') }}"
                                                     class="custom-block-image img-fluid" alt="">
                                             </a>
                                         </div>
@@ -194,11 +194,9 @@ https://templatemo.com/tm-590-topic-listing
                                                             mengelola institusi pendidikan dan kursus sesuai peraturan
                                                             yang berlaku.</p>
                                                     </div>
-
-                                                    <span class="badge bg-design rounded-pill ms-auto">75</span>
                                                 </div>
 
-                                                <img src="images/topics/undraw_Redesign_feedback_re_jvm0.png"
+                                                <img src="{{ asset('images/school_Artboard 1.png') }}"
                                                     class="custom-block-image img-fluid" alt="">
                                             </a>
                                         </div>
@@ -214,11 +212,9 @@ https://templatemo.com/tm-590-topic-listing
                                                         <p class="mb-0">untuk menjalankan usaha di sektor pariwisata,
                                                             rekreasi, dan hiburan sesuai ketentuan yang berlaku.</p>
                                                     </div>
-
-                                                    <span class="badge bg-design rounded-pill ms-auto">100</span>
                                                 </div>
 
-                                                <img src="images/topics/colleagues-working-cozy-office-medium-shot.png"
+                                                <img src="{{ asset('images/hotel-02.png') }}"
                                                     class="custom-block-image img-fluid" alt="">
                                             </a>
                                         </div>
@@ -244,45 +240,7 @@ https://templatemo.com/tm-590-topic-listing
                                                     <span class="badge bg-advertising rounded-pill ms-auto">30</span>
                                                 </div>
 
-                                                <img src="images/topics/undraw_online_ad_re_ol62.png"
-                                                    class="custom-block-image img-fluid" alt="">
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4 col-md-6 col-12 mb-4 mb-lg-3">
-                                        <div class="custom-block bg-white shadow-lg">
-                                            <a href="topics-detail.html">
-                                                <div class="d-flex">
-                                                    <div>
-                                                        <h5 class="mb-2">Video Content</h5>
-
-                                                        <p class="mb-0">Lorem Ipsum dolor sit amet consectetur</p>
-                                                    </div>
-
-                                                    <span class="badge bg-advertising rounded-pill ms-auto">65</span>
-                                                </div>
-
-                                                <img src="images/topics/undraw_Group_video_re_btu7.png"
-                                                    class="custom-block-image img-fluid" alt="">
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4 col-md-6 col-12">
-                                        <div class="custom-block bg-white shadow-lg">
-                                            <a href="topics-detail.html">
-                                                <div class="d-flex">
-                                                    <div>
-                                                        <h5 class="mb-2">Viral Tweet</h5>
-
-                                                        <p class="mb-0">Lorem Ipsum dolor sit amet consectetur</p>
-                                                    </div>
-
-                                                    <span class="badge bg-advertising rounded-pill ms-auto">50</span>
-                                                </div>
-
-                                                <img src="images/topics/undraw_viral_tweet_gndb.png"
+                                                <img src="{{ asset('images/howtowork.png') }}"
                                                     class="custom-block-image img-fluid" alt="">
                                             </a>
                                         </div>
@@ -295,7 +253,6 @@ https://templatemo.com/tm-590-topic-listing
                     </div>
                 </div>
         </section>
-
 
         <section class="timeline-section section-padding" id="section_3">
             <div class="section-overlay"></div>
@@ -451,7 +408,7 @@ https://templatemo.com/tm-590-topic-listing
         </section>
     </main>
 
-    <footer class="site-footer section-padding">
+    <footer class="site-footer section-padding" id="section_5">
         <div class="container">
             <div class="row">
 
@@ -489,15 +446,24 @@ https://templatemo.com/tm-590-topic-listing
                     <h6 class="site-footer-title mb-3">Information</h6>
 
                     <p class="text-white d-flex mb-1">
-                        <a href="tel: 305-240-9671" class="site-footer-link">
-                            305-240-9671
+                        <a href="mailto:partners@indoapps.id" class="site-footer-link">
+                            Email: partners@indoapps.id
                         </a>
                     </p>
 
                     <p class="text-white d-flex">
-                        <a href="mailto:info@company.com" class="site-footer-link">
-                            info@company.com
+                        <a href="wa/me.+62 81228840166" class="site-footer-link">
+                            Phone: +62 81228840166
                         </a>
+                    </p>
+                    <p class="text-white d-flex">
+                        <a href="https://www.indoapps.id" class="site-footer-link">
+                            Website: www.indoapps.id
+                        </a>
+                    </p>
+                    <p class="text-white d-flex">
+                        <span class="site-footer-link">Jl. Ganetri IV No.4, Tonja, Kec. Denpasar Utara, Kota Denpasar,
+                            Bali 80237</span>
                     </p>
                 </div>
 
@@ -515,12 +481,6 @@ https://templatemo.com/tm-590-topic-listing
                             <li><button class="dropdown-item" type="button">Arabic</button></li>
                         </ul>
                     </div>
-
-                    <p class="copyright-text mt-lg-5 mt-4">Copyright © 2048 Topic Listing Center. All rights reserved.
-                        <br><br>Design: <a rel="nofollow" href="https://templatemo.com"
-                            target="_blank">TemplateMo</a>
-                    </p>
-
                 </div>
 
             </div>
