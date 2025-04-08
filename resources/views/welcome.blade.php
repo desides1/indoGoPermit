@@ -38,8 +38,6 @@ https://templatemo.com/tm-590-topic-listing
 </head>
 
 <body id="top">
-
-
     <main>
 
         <nav class="navbar navbar-expand-lg">
