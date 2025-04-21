@@ -16,7 +16,7 @@
         <x-footer />
     </footer>
 
-    <script src="{{ asset('js/stepper.js') }}"></script>
+    <script src="js/stepper.js"></script>
 </body>
 
 </html>

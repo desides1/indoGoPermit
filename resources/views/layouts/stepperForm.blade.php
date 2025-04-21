@@ -46,12 +46,6 @@
                     <span class="absolute top-12 text-sm font-medium text-gray-600">Persyaratan Dokumen</span>
                     <div class="flex-1 h-1 bg-gray-300"></div>
                 </li>
-                <li class="relative flex items-center" data-step="6">
-                    <div
-                        class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-300 text-gray-600 font-bold">
-                        6</div>
-                    <span class="absolute top-12 text-sm font-medium text-gray-600">Proyek</span>
-                </li>
             </ol>
         </div>
         <div class="w-3/4 mx-auto p-6 bg-white">
@@ -62,7 +56,6 @@
                 @yield('step-3')
                 @yield('step-4')
                 @yield('step-5')
-                @yield('step-6')
                 <!-- Navigation Buttons -->
                 <div class="flex justify-between mt-4">
                     <button type="button" id="prevStep"
