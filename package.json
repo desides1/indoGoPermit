@@ -16,6 +16,7 @@
     },
     "dependencies": {
         "@tailwindcss/vite": "^4.0.13",
+        "flyonui": "^2.1.0",
         "latest-version": "^9.0.0"
     }
 }

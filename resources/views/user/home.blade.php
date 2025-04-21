@@ -1,9 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<x-head title="Homepage" description="Ini adalah halaman utama." />
+@extends('layouts.template')
 
-<body>
-    <x-nav />
+@section('title', 'Homepage')
+
+@section('content-primary')
+
     {{-- banner --}}
     <div
         class="grid md:grid-cols-3 gap-2 min-h-[264px] py-8 p-24 bg-gradient-to-r from-emerald-600 to-emerald-300 overflow-hidden justify-center">
@@ -19,42 +19,7 @@
         <div class="relative max-md:hidden p-0">
             <img src="{{ asset('images/banner.png') }}" alt="Banner Image" class="w-fit right-8 md: absolute h-60" />
         </div>
-    </div>
 
-    {{-- status --}}
-    <div class="relative flex gap-4 bottom-6 left-0 right-0 justify-center">
-        <!-- Card Diproses -->
-        <div
-            class=" top-0 left-0 bg-gradient-to-r from-yellow-400 to-orange-400 text-white p-4 rounded-lg shadow-lg w-48">
-            <div class=" top-2 right-2">
-                <i class="fas fa-expand text-white"></i>
-            </div>
-            <p class="text-lg font-semibold">Di Proses</p>
-            {{-- <p class="text-xl font-bold">{{ $diproses }}</p> --}}
-            <p class="text-xl font-bold">256</p>
-        </div>
-
-        <!-- Card Disetujui -->
-        <div
-            class=" top-0 left-52 bg-gradient-to-r from-green-400 to-teal-400 text-white p-4 rounded-lg shadow-lg w-48">
-            <div class=" top-2 right-2">
-                <i class="fas fa-file-alt text-white"></i>
-            </div>
-            <p class="text-lg font-semibold">Di Setujui</p>
-            {{-- <p class="text-xl font-bold">{{ $disetujui }}</p> --}}
-            <p class="text-xl font-bold">256</p>
-        </div>
-
-        <!-- Card Ditolak -->
-        <div
-            class=" top-0 left-[26rem] bg-gradient-to-r from-red-400 to-pink-400 text-white p-4 rounded-lg shadow-lg w-48">
-            <div class=" top-2 right-2">
-                <i class="fas fa-file-pdf text-white"></i>
-            </div>
-            <p class="text-lg font-semibold">Di Tolak</p>
-            {{-- <p class="text-xl font-bold">{{ $ditolak }}</p> --}}
-            <p class="text-xl font-bold">344</p>
-        </div>
     </div>
 
     {{-- panduan dan aktivitas --}}
@@ -62,8 +27,7 @@
         <div class="col-span-2 border border-gray-300 rounded-lg bg-white p-4 ">
             <h1 class="text-2xl font-semibold">Panduan Penggunaan</h1>
             <p class="text-base text-gray-500 mt-4">Berikut adalah panduan penggunaan aplikasi GoPermit</p>
-            <ol
-                class="relative text-gray-500 border-s border-gray-200 light:border-gray-700 light:text-gray-400 mt-8 mx-4">
+            <ol class="relative text-gray-500 border-s border-gray-200 light:border-gray-700 light:text-gray-400 mt-8 mx-4">
                 <li class="mb-10 ms-6">
                     <span
                         class="absolute flex items-center justify-center w-8 h-8 bg-white border-3 border-emerald-600 rounded-full -start-4 ring-4 ring-white light:ring-gray-900 light:bg-green-900">
@@ -122,9 +86,4 @@
             </div>
         </div>
     </div>
-
-    {{-- footer --}}
-    <x-footer />
-</body>
-
-</html>
+@endsection

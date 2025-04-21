@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<x-head title="Data Perizinan" description="Ini adalah halaman utama." />
+@extends('layouts.template')
 
-<body>
-    <x-nav />
+@section('title', 'Homepage')
+
+@section('content-primary')
 
     {{-- Perizinan Kosong --}}
     <div class="place-items-center m-18">
@@ -23,7 +22,4 @@
         </div>
     </div>
 
-    <x-footer />
-</body>
-
-</html>
+@endsection
