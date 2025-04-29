@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\DetailPeroranganController;
 use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {
@@ -14,6 +15,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/activity', [ActivityController::class, 'index'])->name('activity.index');
+Route::get('/DetailPerorangan', [DetailPeroranganController::class, 'store'])->name('DetailPerorangan.store');
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('login', [AuthController::class, 'authentication'])->name('login.auth');
