@@ -73,6 +73,8 @@
     <footer>
         <x-footer />
     </footer>
+
+
 </body>
 
 </html>

@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('data_perizinans', function (Blueprint $table) {
-            $table->id();
+        Schema::create('permit_type', function (Blueprint $table) {
+            $table->id('id_permit_type');
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -22,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('data_perizinans');
+        Schema::dropIfExists('permit_type');
     }
 };

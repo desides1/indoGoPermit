@@ -9,6 +9,8 @@
 @endsection
 
 @section('step-2')
+    {{-- @dd($locations); --}}
+    {{-- @include('user.formPerizinan.formStepper.stepGisPermit') --}}
     @include('user.formPerizinan.formStepper.stepGisPermit')
 @endsection
 
