@@ -22,10 +22,10 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <link href="css/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/accept-terms-not-css.css" />
+    <link rel="stylesheet" href="{{ asset('css/accept-terms-styles.css') }}" />
 
-    <link href="css/templatemo-topic-listing.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/wave.css" />
+    <link href="{{ asset('css/templatemo-topic-listing.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/wave.css') }}" />
     {{-- @vite('resources/css/app.css') --}}
     {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
     <!--
@@ -80,7 +80,7 @@ https://templatemo.com/tm-590-topic-listing
                     </ul>
 
                     <div class="d-none d-lg-block">
-                        <a href="#top" class="navbar-icon bi-person smoothscroll flex"><span
+                        <a href="{{ route('login') }}" class="navbar-icon bi-person smoothscroll flex"><span
                                 class="masuk">Masuk</span></a>
                     </div>
                 </div>

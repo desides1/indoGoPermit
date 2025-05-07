@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
+use App\Http\Controllers\Controller;
 use App\Models\DataPerizinan;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,7 @@ class DataPerizinanController extends Controller
      */
     public function index()
     {
-        return view('user.formPerizinan.formStepper');
+        return view('user.berandaDataPerizinan');
     }
 
     /**
@@ -20,7 +21,7 @@ class DataPerizinanController extends Controller
      */
     public function create()
     {
-        //
+        return view('user.formPerizinan.formStepper');
     }
 
     /**

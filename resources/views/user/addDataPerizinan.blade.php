@@ -3,8 +3,6 @@
 @section('title', 'Homepage')
 
 @section('content-primary')
-
-
     <section class="bg-primary dark:bg-primary">
         <div class="flex flex-col items-center justify-center px-6 mx-auto ">
             <div class=" bg-white rounded-lg shadow md:my-22 sm:max-w-md xl:p-0 max-w-full">
@@ -13,7 +11,25 @@
 
 
                     <p>Pilih Jenis Perizinan Yang Akan Di Ajukan Sesusai Bidang Usaha Yang Di Miliki</p>
-                    <form class="space-y-4 md:space-y-6" action="#">
+
+                    <form class="max-w-sm mx-auto" action="{{ route('request') }}">
+                        @csrf
+                        <label for="countries" class="block mb-2 text-sm font-medium text-gray-900">Pilih jenis
+                            perizinan</label>
+                        <select id="countries"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
+                            <option value="" disabled selected>-- Pilih jenis perizinan --</option>
+                            @foreach ($permitTypes as $type)
+                                <option value="{{ $type }}">{{ $type }}</option>
+                            @endforeach
+                        </select>
+
+                        <button type="submit"
+                            class="mt-6 w-full text-white bg-primary hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary dark:hover:bg-primary-700 dark:focus:ring-primary-800">Selanjutnya</button>
+
+                    </form>
+
+                    {{-- <form class="space-y-4 md:space-y-6" action="{{ route('add-Data') }}">
                         <div>
 
                             <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown"
@@ -57,12 +73,11 @@
                         <button type="submit"
                             class="w-full text-white bg-primary hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary dark:hover:bg-primary-700 dark:focus:ring-primary-800">Selanjutnya</button>
 
-                    </form>
+                    </form> --}}
                 </div>
             </div>
         </div>
 
     </section>
-
 
 @endsection
