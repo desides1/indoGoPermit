@@ -1,0 +1,447 @@
+/* General Styles */
+body {
+    display: flex;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f8f9fa;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 300px;
+    background: #ffffff;
+    color: black;
+    height: 100vh;
+    padding: 5px;
+    border-right: 2px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 1000;
+}
+
+/* Logo */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 12px;
+    width: 100%;
+}
+
+.logo img {
+    width: 170px;
+    height: auto;
+}
+
+.logo span {
+    font-weight: bold;
+    font-size: 18px;
+    color: #333;
+}
+
+/* Menu List */
+ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 25px;
+    width: 100%;
+}
+
+ul li {
+    padding: 18px 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background 0.3s ease-in-out;
+}
+
+ul li:hover {
+    background: #f0f0f0;
+}
+
+ul li.active {
+    background: #e9ecef;
+
+    font-weight: bold;
+}
+
+ul li span {
+    margin-left: 0;
+}
+
+
+ul li.active {
+    background: #e9ecef;
+    border-radius: 3px;
+}
+
+/* HILANGKAN UNDERLINE LINK DI SIDEBAR */
+.sidebar ul li a {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* OPSIONAL: efek hover pada link */
+.sidebar ul li a:hover {
+    text-decoration: none;
+    color: #007bff;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-left: 300px; /* Geser dari sidebar */
+    padding: 20px;
+    padding-top: 80px; /* Biar tidak tertindih header */
+}
+
+/* Header - Fixed di atas */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 10px 20px;
+    border-bottom: 2px solid #ddd;
+    position: fixed;
+    top: 0;
+    left: 300px;
+    right: 0;
+    z-index: 999;
+    width: calc(100% - 300px);
+}
+
+.header h1 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-left: 20px;
+}
+
+.header {
+    padding: 10px 20px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+}
+
+.header h1 {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.header .icons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 20px;
+    color: #333;
+}
+
+.header .icons i {
+    font-size: 20px;
+    color: #333;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f8f9fa;
+    padding: 10px;
+}
+
+.icons i {
+    font-size: 18px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+/* Profile */
+.profile {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+}
+
+.profile img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.btn-input {
+    margin-left: auto;
+    padding: 10px 15px;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Informasi Permohonan */
+.info-section {
+    margin-top: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.info-section table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.info-section th {
+    background: #9BE8D1;
+    padding: 10px;
+}
+
+.info-section td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Dokumen */
+.document-section {
+    margin-top: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.document-list {
+    margin-top: 10px;
+}
+
+.document-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+}
+
+/* Teks judul dokumen */
+.upload-text {
+    color: #333;
+    font-size: 16px;
+    font-weight: 500;
+    flex: 1;
+}
+
+/* Input file (readonly) */
+.file-input {
+    flex-grow: 1;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #999;
+    background: #f9f9f9;
+    outline: none;
+    cursor: not-allowed;
+    margin: 0 10px;
+}
+
+/* Tombol upload */
+.upload-btn {
+    padding: 10px;
+    background: #c3ecda;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.upload-btn i {
+    font-size: 14px;
+    color: #4a7c59;
+}
+
+/* Tombol Next (Tetap di kanan) */
+.next-container {
+    display: flex;
+    justify-content: flex-end; /* Posisi tetap kanan */
+    width: 100%;
+    margin-top: 20px;
+}
+
+.next-btn {
+    padding: 10px 20px;
+    background: #9BE8D1;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.next-btn:hover {
+    background: #9BE8D1;
+}
+
+/* Informasi Permohonan */
+.info-section {
+    margin-top: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.info-section table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.info-section th {
+    background: #9BE8D1;
+    padding: 10px;
+}
+
+.info-section td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Styling untuk section dokumen */
+.document-section {
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.document-section h3 {
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* List dokumen */
+.document-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Item dokumen */
+.document-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f9f9f9;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+/* Ikon PDF */
+.pdf-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Teks upload */
+.upload-text {
+    flex-grow: 1;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+}
+
+/* Tombol Upload */
+.upload-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.upload-btn img {
+    width: 30px;
+    height: 30px;
+}
+
+.upload-btn:hover {
+    transform: scale(1.1);
+}
+
+/* Kontainer tombol */
+.buttons {
+    display: flex;
+    justify-content: space-between; /* Memposisikan tombol di kiri dan kanan */
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+}
+
+/* Tombol Back */
+.back-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    background: #9be8d17f;
+    color: rgba(129, 126, 126, 0.7);
+}
+
+.back-btn:hover {
+    background: #9be8d17f;
+}
+
+/* Tombol Send */
+.send-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    background: #9BE8D1;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px; /* Jarak antara teks dan ikon */
+}
+
+.send-btn:hover {
+    background: #9BE8D1;
+}
+
+/* Ikon pada tombol Send */
+.send-icon {
+    font-size: 14px;
+}
+

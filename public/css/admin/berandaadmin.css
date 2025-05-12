@@ -1,0 +1,473 @@
+/* General Styles */
+body {
+    display: flex;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f8f9fa;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 300px;
+    background: #ffffff;
+    color: black;
+    height: 100vh;
+    padding: 5px;
+    border-right: 2px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 1000;
+}
+
+/* Logo */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 12px;
+    width: 100%;
+}
+
+.logo img {
+    width: 170px;
+    height: auto;
+}
+
+.logo span {
+    font-weight: bold;
+    font-size: 18px;
+    color: #333;
+}
+
+/* Menu List */
+ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 25px;
+    width: 100%;
+}
+
+ul li {
+    padding: 18px 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background 0.3s ease-in-out;
+}
+
+ul li:hover {
+    background: #f0f0f0;
+}
+
+ul li.active {
+    background: #e9ecef;
+
+    font-weight: bold;
+}
+
+ul li span {
+    margin-left: 0;
+}
+
+
+ul li.active {
+    background: #e9ecef;
+    border-radius: 3px;
+}
+
+/* HILANGKAN UNDERLINE LINK DI SIDEBAR */
+.sidebar ul li a {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* OPSIONAL: efek hover pada link */
+.sidebar ul li a:hover {
+    text-decoration: none;
+    color: #007bff;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-left: 300px; /* Geser dari sidebar */
+    padding: 20px;
+    padding-top: 80px; /* Biar tidak tertindih header */
+}
+
+/* Header - Fixed di atas */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 10px 20px;
+    border-bottom: 2px solid #ddd;
+    position: fixed;
+    top: 0;
+    left: 300px;
+    right: 0;
+    z-index: 999;
+    width: calc(100% - 300px);
+}
+
+.header h1 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-left: 20px;
+}
+
+.header {
+    padding: 10px 20px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+}
+
+.header h1 {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.header .icons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 20px;
+    color: #333;
+}
+
+.header .icons i {
+    font-size: 20px;
+    color: #333;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f8f9fa;
+    padding: 10px;
+}
+
+
+body {
+    display: flex;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f8f9fa;
+    overflow-x: hidden; /* Agar tidak bisa digeser ke kanan */
+}
+
+.cards {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+    margin: 40px auto;
+    max-width: 100%; /* Supaya tidak melebihi lebar layar */
+    flex-wrap: wrap; /* Agar responsif di layar kecil */
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+/* Statistik Table - Tambahkan margin untuk memberi jarak dari sidebar */
+.statistics {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-top: 1px solid #ddd;
+    width: 100%;
+    margin-left: 20px;
+}
+
+.card {
+    flex: 1;
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+    width: 220px; /* Diperkecil agar tidak overflow */
+    max-width: 100%;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 100%);
+    border-radius: 20px;
+}
+
+.card.blue { background: linear-gradient(135deg, #e3f2fd, #ffffff); }
+.card.yellow { background: linear-gradient(135deg, #fff3cd, #ffffff); }
+.card.green { background: linear-gradient(135deg, #d4edda, #ffffff); }
+.card.red { background: linear-gradient(135deg, #f8d7da, #ffffff); }
+
+.chart {
+    flex: 1;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.card-border {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 5px;
+    height: 100%;
+    border-radius: 5px 0 0 5px;
+}
+
+.card.blue .card-border { background: #007bff; }
+.card.yellow .card-border { background: #ffc107; }
+.card.green .card-border { background: #28a745; }
+.card.red .card-border { background: #dc3545; }
+
+.card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+}
+
+.card-header img {
+    width: 45px;
+    height: auto;
+    object-fit: contain;
+    margin-top: -5px;
+    margin-left: -5px;
+}
+
+.card-title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.icon-text p {
+    flex-grow: 1;
+    text-align: left;
+    font-size: 12px;
+    color: gray;
+    margin-left: 10px;
+}
+
+.icon-text i {
+    color: gray;
+}
+
+h3 {
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+.big-number {
+    font-size: 28px;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.small-text {
+    font-size: 14px;
+    color: gray;
+}
+
+.last-week {
+    font-size: 14px;
+    color: green;
+}
+
+.card {
+    background: #f8fbff;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    width: 220px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-border {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 5px;
+    background-color: #007bff;
+    border-radius: 15px 0 0 15px;
+}
+
+.top-section {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.top-section img {
+    width: 30px;
+    height: auto;
+    object-fit: contain;
+    margin-top: -5px;
+    margin-left: -5px;
+}
+
+.main-info {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.big-number {
+    font-size: 26px;
+    font-weight: bold;
+    color: #000;
+}
+
+.small-text {
+    font-size: 14px;
+    color: #808080;
+}
+
+.last-week {
+    font-size: 14px;
+    color: green;
+    text-align: right;
+}
+
+.statistics {
+    background: white;
+    padding: 20px;
+    border-radius: 0;
+    box-shadow: none;
+    border-top: 1px solid #ddd;
+    width: 100%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background: #f4f4f4;
+}
+
+/* Progress Bar */
+.progress {
+    height: 8px;
+    border-radius: 4px;
+    width: 80px;
+}
+
+.progress.blue { background: #007bff; width: 50%; }
+.progress.yellow { background: #ffc107; width: 40%; }
+.progress.green { background: #28a745; width: 70%; }
+.progress.red { background: #dc3545; width: 30%; }
+
+.charts {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.chart {
+    flex: 1;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.chart-container {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    flex: 1;
+}
+
+.chart-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.chart-legend {
+    display: flex;
+    justify-content: center;
+    font-size: 12px;
+    margin-top: 10px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.legend-color {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+/* Responsif untuk layar kecil */
+@media (max-width: 768px) {
+    .cards {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .card {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .charts {
+        flex-direction: column;
+    }
+}
