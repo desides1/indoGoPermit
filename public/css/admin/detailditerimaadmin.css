@@ -1,0 +1,471 @@
+/* General Styles */
+body {
+    display: flex;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f8f9fa;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 300px;
+    background: #ffffff;
+    color: black;
+    height: 100vh;
+    padding: 5px;
+    border-right: 2px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 1000;
+}
+
+/* Logo */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 12px;
+    width: 100%;
+}
+
+.logo img {
+    width: 170px;
+    height: auto;
+}
+
+.logo span {
+    font-weight: bold;
+    font-size: 18px;
+    color: #333;
+}
+
+/* Menu List */
+ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 25px;
+    width: 100%;
+}
+
+ul li {
+    padding: 18px 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background 0.3s ease-in-out;
+}
+
+ul li:hover {
+    background: #f0f0f0;
+}
+
+ul li.active {
+    background: #e9ecef;
+
+    font-weight: bold;
+}
+
+ul li span {
+    margin-left: 0;
+}
+
+
+ul li.active {
+    background: #e9ecef;
+    border-radius: 3px;
+}
+
+/* HILANGKAN UNDERLINE LINK DI SIDEBAR */
+.sidebar ul li a {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* OPSIONAL: efek hover pada link */
+.sidebar ul li a:hover {
+    text-decoration: none;
+    color: #007bff;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-left: 300px; /* Geser dari sidebar */
+    padding: 20px;
+    padding-top: 80px; /* Biar tidak tertindih header */
+}
+
+/* Header - Fixed di atas */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 10px 20px;
+    border-bottom: 2px solid #ddd;
+    position: fixed;
+    top: 0;
+    left: 300px;
+    right: 0;
+    z-index: 999;
+    width: calc(100% - 300px);
+}
+
+.header h1 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-left: 20px;
+}
+
+.header {
+    padding: 10px 20px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+}
+
+.header h1 {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.header .icons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 20px;
+    color: #333;
+}
+
+.header .icons i {
+    font-size: 20px;
+    color: #333;
+}
+
+/* Profile */
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.profile img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.profile-info {
+    flex-grow: 1;
+}
+
+/* Download Button */
+.btn-download {
+    background-color: #9BE8D1;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.btn-download svg {
+    fill: white;
+}
+
+/* Tab Filter */
+.tab-filter {
+    display: flex;
+    gap: 30px;
+    margin-top: 15px;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 8px;
+}
+
+.tab-filter button {
+    background: none;
+    border: none;
+    font-size: 14px;
+    font-weight: normal;
+    color: #888;
+    cursor: pointer;
+    padding: 10px 5px;
+    position: relative;
+}
+
+.tab-filter button.active {
+    font-weight: bold;
+    color: black;
+}
+
+.tab-filter button.active::after {
+    content: "";
+    display: block;
+    width: 110%;
+    height: 3px;
+    background: linear-gradient(to right, #7b1fa2, #ff5722);
+    position: absolute;
+    bottom: -8px;
+    left: -5%;
+}
+
+/* Tab Content */
+.tab-content {
+    display: none;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Animasi Tab */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Form */
+.form-section {
+    margin-top: 20px;
+}
+
+.form-section label {
+    display: block;
+    font-weight: bold;
+    margin: 10px 0 5px;
+}
+
+.form-section input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+/* Peta Lokasi */
+.map-container {
+    margin-top: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+.map-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* Tabel Data Lokasi */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background: white;
+    border-radius: 5px;
+}
+
+.data-table th, .data-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.data-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.data-table tr:hover {
+    background-color: #f9f9f9;
+}
+
+.data-table button {
+    background: #7b1fa2;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+/* Section Tipe Pemohon */
+.section-container {
+    margin-top: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+    font-size: 22px;
+    font-weight: bold;
+    color: #2C6E49;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}
+
+/* Grid untuk Data Tipe Pemohon */
+.data-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 Kolom */
+    gap: 10px 30px; /* Jarak antar kolom & baris */
+    font-size: 16px;
+    color: #333;
+}
+
+/* Responsif: Jika layar kecil, ubah ke 1 kolom */
+@media (max-width: 768px) {
+    .data-grid {
+        grid-template-columns: repeat(1, 1fr); /* 1 Kolom */
+    }
+}
+
+/* Tab Dokumen */
+.document-list {
+    margin-top: 15px;
+    padding: 10px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.document-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.document-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid #ddd;
+    font-size: 16px;
+}
+
+.document-list li:last-child {
+    border-bottom: none;
+}
+
+/* Warna merah untuk dokumen wajib */
+.document-list li span.required {
+    color: red;
+    font-weight: bold;
+}
+
+/* Ikon mata untuk melihat dokumen */
+.document-list .view-icon {
+    cursor: pointer;
+    color: #333;
+    font-size: 18px;
+    transition: color 0.3s ease-in-out;
+}
+
+.document-list .view-icon:hover {
+    color: #7b1fa2;
+}
+
+/* Tab Proyek */
+.project-details {
+    margin-top: 15px;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.project-details .row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.project-details .row:last-child {
+    border-bottom: none;
+}
+
+/* Status Buttons */
+.status-buttons {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.status-btn {
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.status-process {
+    background-color: #ffff99;
+    color: black;
+}
+
+.status-accepted {
+    background-color: #28a745;
+    color: white;
+}
+
+.status-rejected {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Buttons */
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.back-btn, .next-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.back-btn {
+    background: #9be8d17f;
+    color: rgba(129, 126, 126, 0.7);
+}
+
+.next-btn {
+    background: #9BE8D1;
+    color: black;
+}
