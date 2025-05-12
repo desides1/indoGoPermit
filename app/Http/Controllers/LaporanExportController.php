@@ -41,7 +41,7 @@ class LaporanExportController extends Controller
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function downloadExcel()
-    {
-        return Excel::download(new LaporanExport, 'laporan-cetak-dokumen.xlsx');
-    }
+   {
+       return Excel::download(new LaporanExport, 'laporan.xlsx');
+   }
 }

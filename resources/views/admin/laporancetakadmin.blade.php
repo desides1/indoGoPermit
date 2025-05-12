@@ -167,6 +167,9 @@
                         rows.forEach(row => row.style.display = '');
                     });
                 }
+                document.querySelectorAll('.export-btn')[0].addEventListener('click', function() {
+                    window.print();
+                }
             });
         </script>
     </body>
