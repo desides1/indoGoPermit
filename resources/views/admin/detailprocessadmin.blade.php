@@ -169,7 +169,7 @@
 
     <!-- Status Buttons -->
     <div class="status-buttons">
-        <button class="status-btn status-process">Done</button>
+        <button class="status-btn status-process" onclick="window.location.href='/admin/detaildoneadmin'">Done</button>
     </div>
 </div>
 

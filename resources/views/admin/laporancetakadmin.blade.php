@@ -49,6 +49,17 @@
                     🔍
                     <input type="text" id="searchInput" placeholder="Ketikkan...">
                 </div>
+
+                <div class="status-filter">
+                <label for="filterStatus">Status:</label>
+                <select id="filterStatus">
+                    <option value="">Semua</option>
+                    <option value="Disetujui">Disetujui</option>
+                    <option value="Ditolak">Ditolak</option>
+                    <option value="Selesai">Selesai</option>
+                </select>
+            </div>
+
                 <button class="filter-btn" id="resetBtn">🔄 Reset</button>
             </div>
 
@@ -73,7 +84,7 @@
                             <td>Disetujui</td>
                             <td>10/03/2025</td>
                             <td>17/03/2025</td>
-                            <td>
+                            <td class="aksi-col">
                                 <button class="btn-action">👁️ Lihat</button>
                                 <button class="btn-action">📥 Download PDF</button>
                                 <button class="btn-action">🖨️ Cetak</button>
@@ -86,7 +97,7 @@
                             <td>Ditolak</td>
                             <td>22/02/2025</td>
                             <td>28/02/2025</td>
-                            <td>
+                            <td class="aksi-col">
                                 <button class="btn-action">👁️ Lihat</button>
                                 <button class="btn-action">📥 Download PDF</button>
                                 <button class="btn-action">🖨️ Cetak</button>
@@ -99,7 +110,7 @@
                             <td>Selesai</td>
                             <td>13/03/2025</td>
                             <td>20/03/2025</td>
-                            <td>
+                            <td class="aksi-col">
                                 <button class="btn-action">👁️ Lihat</button>
                                 <button class="btn-action">📥 Download PDF</button>
                                 <button class="btn-action">🖨️ Cetak</button>
@@ -110,9 +121,8 @@
             </div>
 
             <div class="export-section">
-                <button class="export-btn"><i class="fas fa-print"></i> Cetak Semua</button>
-                <button class="export-btn"><i class="fas fa-file-pdf"></i> Download PDF</button>
-                <button class="export-btn"><i class="fas fa-file-excel"></i> Download Excel</button>
+                <button class="export-btn" id="printAll"><i class="fas fa-print"></i> Cetak Semua</button>
+                <button class="export-btn" id="downloadPDFAll"><i class="fas fa-file-pdf"></i> Download PDF</button>
             </div>
 
             <div class="pagination">
@@ -128,49 +138,176 @@
             </div>
         </div>
 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
         <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const searchInput = document.getElementById('searchInput');
-                const resetBtn = document.getElementById('resetBtn');
-                const tableBody = document.getElementById('laporanTable');
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.getElementById('searchInput');
+            const resetBtn = document.getElementById('resetBtn');
+            const tableBody = document.getElementById('laporanTable');
+            const filterStatus = document.getElementById('filterStatus');
 
-                // Pencarian
-                if (searchInput && tableBody) {
-                    searchInput.addEventListener('keyup', function () {
-                        const searchText = this.value.toLowerCase().trim();
-                        const rows = tableBody.querySelectorAll('tr');
+            function filterRows() {
+                const searchText = searchInput.value.toLowerCase().trim();
+                const selectedStatus = filterStatus.value.toLowerCase().trim();
+                const rows = tableBody.querySelectorAll('tr');
 
-                        rows.forEach(row => {
-                            const nama = row.children[1].textContent.toLowerCase();
-                            const jenis = row.children[2].textContent.toLowerCase();
-                            const status = row.children[3].textContent.toLowerCase();
+                rows.forEach(row => {
+                    const nama = row.children[1].textContent.toLowerCase();
+                    const jenis = row.children[2].textContent.toLowerCase();
+                    const status = row.children[3].textContent.toLowerCase();
 
-                            if (
-                                searchText === "" ||
-                                nama.includes(searchText) ||
-                                jenis.includes(searchText) ||
-                                status.includes(searchText)
-                            ) {
-                                row.style.display = '';
-                            } else {
-                                row.style.display = 'none';
-                            }
-                        });
+                    const matchesSearch =
+                        searchText === "" ||
+                        nama.includes(searchText) ||
+                        jenis.includes(searchText) ||
+                        status.includes(searchText);
+
+                    const matchesStatus =
+                        selectedStatus === "" ||
+                        status.includes(selectedStatus);
+
+                    row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
+                });
+            }
+
+            if (searchInput && tableBody) {
+                searchInput.addEventListener('keyup', filterRows);
+            }
+
+            if (filterStatus && tableBody) {
+                filterStatus.addEventListener('change', filterRows);
+            }
+
+            resetBtn.addEventListener('click', function () {
+                searchInput.value = '';
+                filterStatus.value = '';
+                const rows = tableBody.querySelectorAll('tr');
+                rows.forEach(row => row.style.display = '');
+            });
+
+            // Cetak Semua
+            document.getElementById('printAll').addEventListener('click', function () {
+                const tableContent = document.querySelector('.table-container').cloneNode(true);
+                tableContent.querySelectorAll('tr').forEach(row => {
+                    if (row.cells.length > 0) {
+                        row.deleteCell(row.cells.length - 1); // Hapus kolom aksi
+                    }
+                });
+
+                const printWindow = window.open('', '_blank');
+                printWindow.document.write('<html><head><title>Cetak Laporan</title></head><body>');
+                printWindow.document.write('<h2>Laporan Perizinan</h2>');
+                printWindow.document.write(tableContent.outerHTML);
+                printWindow.document.write('</body></html>');
+                printWindow.document.close();
+                printWindow.print();
+            });
+
+            // Download PDF Semua
+            document.getElementById('downloadPDFAll').addEventListener('click', function () {
+                const element = document.querySelector('.table-container').cloneNode(true);
+                element.querySelectorAll('tr').forEach(row => {
+                    if (row.cells.length > 0) {
+                        row.deleteCell(row.cells.length - 1); // Hapus kolom aksi
+                    }
+                });
+
+                html2pdf().from(element).save("laporan-semua.pdf");
+            });
+
+            // Download Excel Semua
+            document.getElementById('downloadExcelAll').addEventListener('click', function () {
+                const table = document.querySelector('.table-container table').cloneNode(true);
+                table.querySelectorAll('tr').forEach(row => {
+                    if (row.cells.length > 0) {
+                        row.deleteCell(row.cells.length - 1); // Hapus kolom aksi
+                    }
+                });
+
+                let tableHTML = table.outerHTML.replace(/ /g, '%20');
+                const filename = 'laporan-semua.xls';
+                const dataType = 'application/vnd.ms-excel';
+
+                const downloadLink = document.createElement('a');
+                document.body.appendChild(downloadLink);
+                downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+                downloadLink.download = filename;
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+            });
+
+            // Tombol aksi per baris
+            document.querySelectorAll('.btn-action').forEach(btn => {
+                // Cetak Per Baris
+                if (btn.textContent.includes('🖨️')) {
+                    btn.addEventListener('click', function () {
+                        const row = this.closest('tr');
+                        const clonedRow = row.cloneNode(true);
+                        clonedRow.removeChild(clonedRow.lastElementChild); // Hapus kolom aksi
+
+                        const printWindow = window.open('', '_blank');
+                        printWindow.document.write('<html><head><title>Cetak Laporan</title></head><body>');
+                        printWindow.document.write('<h2>Laporan Perizinan</h2>');
+                        printWindow.document.write('<table border="1"><thead><tr>' +
+                            '<th>NO</th><th>NAMA PEMOHON</th><th>JENIS IZIN</th>' +
+                            '<th>STATUS</th><th>TANGGAL PENGAJUAN</th><th>TANGGAL SELESAI</th></tr></thead><tbody>');
+                        printWindow.document.write('<tr>' + clonedRow.innerHTML + '</tr>');
+                        printWindow.document.write('</tbody></table></body></html>');
+                        printWindow.document.close();
+                        printWindow.print();
                     });
                 }
 
-                // Reset tombol
-                if (resetBtn && tableBody) {
-                    resetBtn.addEventListener('click', function () {
-                        searchInput.value = '';
-                        const rows = tableBody.querySelectorAll('tr');
-                        rows.forEach(row => row.style.display = '');
+                // Download PDF Per Baris
+                if (btn.textContent.includes('📥')) {
+                    btn.addEventListener('click', function () {
+                        const row = this.closest('tr');
+                        const clonedRow = row.cloneNode(true);
+                        clonedRow.removeChild(clonedRow.lastElementChild); // Hapus kolom aksi
+
+                        const wrapper = document.createElement('div');
+                        wrapper.innerHTML = `
+                            <h2>Laporan Perizinan</h2>
+                            <table border="1">
+                                <thead>
+                                    <tr>
+                                        <th>NO</th>
+                                        <th>NAMA PEMOHON</th>
+                                        <th>JENIS IZIN</th>
+                                        <th>STATUS</th>
+                                        <th>TANGGAL PENGAJUAN</th>
+                                        <th>TANGGAL SELESAI</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        `;
+
+                        wrapper.querySelector('tbody').appendChild(clonedRow);
+
+                        html2pdf().from(wrapper).set({
+                            margin: 1,
+                            filename: 'laporan-perizinan.pdf',
+                            html2canvas: { scale: 2 },
+                            jsPDF: { unit: 'cm', format: 'a4', orientation: 'portrait' }
+                        }).save();
+
+                        // Excel
+                        const tableHTML = wrapper.querySelector('table').outerHTML.replace(/ /g, '%20');
+                        const filename = 'laporan-per-baris.xls';
+                        const dataType = 'application/vnd.ms-excel';
+
+                        const downloadLink = document.createElement('a');
+                        document.body.appendChild(downloadLink);
+                        downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+                        downloadLink.download = filename;
+                        downloadLink.click();
+                        document.body.removeChild(downloadLink);
                     });
-                }
-                document.querySelectorAll('.export-btn')[0].addEventListener('click', function() {
-                    window.print();
                 }
             });
+        });
         </script>
     </body>
     </html>

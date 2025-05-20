@@ -192,176 +192,204 @@
 
                 <div class="buttons">
                     <button class="back-btn" onclick="changeTab(-1)">← Back</button>
-                    <button class="send-btn">Send <span class="send-icon">📩</span></button>
+                    <button class="send-btn" onclick="kirimData()">Send <span class="send-icon">📩</span></button>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        let currentTab = 0;
-        const tabs = document.querySelectorAll(".tab-content");
+            <script>
+            let currentTab = 0;
+            const tabs = document.querySelectorAll(".tab-content");
 
-        function showTab(index) {
-            if (index < 0 || index >= tabs.length) return;
+            function showTab(index) {
+                if (index < 0 || index >= tabs.length) return;
 
-            tabs.forEach((tab, i) => {
-                tab.classList.remove("active-tab");
-                if (i === index) {
-                    tab.classList.add("active-tab");
+                tabs.forEach((tab, i) => {
+                    tab.classList.remove("active-tab");
+                    if (i === index) {
+                        tab.classList.add("active-tab");
+                    }
+                });
+
+                currentTab = index;
+            }
+
+            function changeTab(step) {
+                const newIndex = currentTab + step;
+                if (newIndex >= 0 && newIndex < tabs.length) {
+                    // Validasi sebelum lanjut ke tab 2
+                    if (currentTab === 0 && newIndex === 1) {
+                        if (!isTab1Valid()) {
+                            alert("Harap lengkapi semua input dan unggah semua dokumen terlebih dahulu.");
+                            return;
+                        }
+                        copyInputsToPreview();
+                        copyFileNamesToPreview();
+                    }
+                    showTab(newIndex);
                 }
-            });
+            }
 
-            currentTab = index;
-        }
+            function handleBack() {
+                if (currentTab > 0) {
+                    changeTab(-1);
+                } else {
+                    window.location.href = "{{ route('dataperizinanadmin.index') }}";
+                }
+            }
 
-        function changeTab(step) {
-            const newIndex = currentTab + step;
-            if (newIndex >= 0 && newIndex < tabs.length) {
-                // Validasi sebelum lanjut ke tab 2
-                if (currentTab === 0 && newIndex === 1) {
+            function enableInputs() {
+                const inputs = document.querySelectorAll("#tab-1 .input-field");
+                inputs.forEach(input => {
+                    input.disabled = false;
+                });
+            }
+
+            function copyInputsToPreview() {
+                document.getElementById("jenisIzinPreview").textContent = document.getElementById("jenisIzin").value;
+                document.getElementById("tglAjukanPreview").textContent = document.getElementById("tglAjukan").value;
+                document.getElementById("tglSelesaiPreview").textContent = document.getElementById("tglSelesai").value;
+                document.getElementById("catatanPreview").textContent = document.getElementById("catatan").value;
+            }
+
+            function copyFileNamesToPreview() {
+                const fileInputs = document.querySelectorAll("#tab-1 input[type='file']");
+                const fileItems = document.querySelectorAll("#tab-2 .document-item");
+
+                fileInputs.forEach((input, i) => {
+                    const fileName = input.files.length > 0 ? input.files[0].name : null;
+                    const fileIcon = fileItems[i].querySelector("img");
+                    const fileLabel = fileItems[i].querySelector(".upload-text");
+
+                    if (fileName) {
+                        fileLabel.textContent = fileName;
+
+                        const ext = fileName.split('.').pop().toLowerCase();
+                        let iconPath = "";
+
+                        switch (ext) {
+                            case "pdf":
+                                iconPath = "{{ asset('images/PDF ICON.png') }}"; break;
+                            case "doc":
+                            case "docx":
+                                iconPath = "{{ asset('images/DOC ICON.png') }}"; break;
+                            case "jpg":
+                            case "jpeg":
+                            case "png":
+                                iconPath = "{{ asset('images/JPG ICON.png') }}"; break;
+                            case "zip":
+                            case "rar":
+                                iconPath = "{{ asset('images/ZIP ICON.png') }}"; break;
+                            default:
+                                iconPath = "{{ asset('images/FILE ICON.png') }}"; break;
+                        }
+
+                        fileIcon.src = iconPath;
+                        fileIcon.style.display = "inline";
+                    } else {
+                        fileLabel.textContent = "Belum dipilih";
+                        fileIcon.style.display = "none";
+                    }
+                });
+            }
+
+            function isTab1Valid() {
+                const requiredInputs = document.querySelectorAll("#tab-1 .input-field");
+                const requiredFiles = document.querySelectorAll("#tab-1 input[type='file']");
+
+                let allInputsFilled = Array.from(requiredInputs).every(input => input.value.trim() !== "");
+                let allFilesUploaded = Array.from(requiredFiles).every(file => file.files.length > 0);
+
+                return allInputsFilled && allFilesUploaded;
+            }
+
+            function isValidFile(fileName, allowedExtensions) {
+                const ext = fileName.split('.').pop().toLowerCase();
+                return allowedExtensions.includes(ext);
+            }
+
+            document.addEventListener("DOMContentLoaded", () => {
+                showTab(0);
+
+                document.querySelectorAll(".upload-btn").forEach((btn) => {
+                    const fileInput = btn.nextElementSibling;
+                    const fileContainer = btn.previousElementSibling;
+                    const textField = fileContainer.querySelector(".file-input");
+                    const removeBtn = fileContainer.querySelector(".remove-file");
+
+                    // Tombol Upload: Buka file picker
+                    btn.addEventListener("click", () => {
+                        fileInput.click();
+                    });
+
+                    // Saat file dipilih
+                    fileInput.addEventListener("change", () => {
+                        if (fileInput.files.length > 0) {
+                            const fileName = fileInput.files[0].name;
+                            const allowedExtensions = fileInput.accept.split(',').map(ext => ext.replace('.', '').toLowerCase());
+
+                            if (isValidFile(fileName, allowedExtensions)) {
+                                textField.value = fileName;
+                                textField.classList.remove("error-file");
+                                textField.classList.add("has-file");
+                                removeBtn.style.display = "inline";
+                            } else {
+                                textField.value = fileName + " ❌ File tidak valid!";
+                                textField.classList.add("error-file");
+                                textField.classList.add("has-file");
+                                removeBtn.style.display = "inline";
+                            }
+                        }
+                    });
+
+                    // Tombol silang untuk menghapus file
+                    removeBtn.addEventListener("click", () => {
+                        fileInput.value = "";
+                        textField.value = "";
+                        textField.classList.remove("error-file", "has-file");
+                        removeBtn.style.display = "none";
+                    });
+                });
+
+                // ✅ Tambahkan event listener untuk tombol Send
+                document.querySelector(".send-btn").addEventListener("click", () => {
                     if (!isTab1Valid()) {
                         alert("Harap lengkapi semua input dan unggah semua dokumen terlebih dahulu.");
                         return;
                     }
-                    copyInputsToPreview();
-                    copyFileNamesToPreview();
-                }
-                showTab(newIndex);
-            }
-        }
 
-        function handleBack() {
-            if (currentTab > 0) {
-                changeTab(-1);
-            } else {
-                window.location.href = "{{ route('dataperizinanadmin.index') }}";
-            }
-        }
+                    // Ambil data dari input
+                    const jenisIzin = document.getElementById("jenisIzin").value;
+                    const tglAjukan = document.getElementById("tglAjukan").value;
+                    const tglSelesai = document.getElementById("tglSelesai").value;
+                    const catatan = document.getElementById("catatan").value;
 
-        function enableInputs() {
-            const inputs = document.querySelectorAll("#tab-1 .input-field");
-            inputs.forEach(input => {
-                input.disabled = false;
-            });
-        }
-
-        function copyInputsToPreview() {
-            document.getElementById("jenisIzinPreview").textContent = document.getElementById("jenisIzin").value;
-            document.getElementById("tglAjukanPreview").textContent = document.getElementById("tglAjukan").value;
-            document.getElementById("tglSelesaiPreview").textContent = document.getElementById("tglSelesai").value;
-            document.getElementById("catatanPreview").textContent = document.getElementById("catatan").value;
-        }
-
-        function copyFileNamesToPreview() {
-            const fileInputs = document.querySelectorAll("#tab-1 input[type='file']");
-            const fileItems = document.querySelectorAll("#tab-2 .document-item");
-
-            fileInputs.forEach((input, i) => {
-                const fileName = input.files.length > 0 ? input.files[0].name : null;
-                const fileIcon = fileItems[i].querySelector("img");
-                const fileLabel = fileItems[i].querySelector(".upload-text");
-
-                if (fileName) {
-                    fileLabel.textContent = fileName;
-
-                    const ext = fileName.split('.').pop().toLowerCase();
-                    let iconPath = "";
-
-                    switch (ext) {
-                        case "pdf":
-                            iconPath = "{{ asset('images/PDF ICON.png') }}"; break;
-                        case "doc":
-                        case "docx":
-                            iconPath = "{{ asset('images/DOC ICON.png') }}"; break;
-                        case "jpg":
-                        case "jpeg":
-                        case "png":
-                            iconPath = "{{ asset('images/JPG ICON.png') }}"; break;
-                        case "zip":
-                        case "rar":
-                            iconPath = "{{ asset('images/ZIP ICON.png') }}"; break;
-                        default:
-                            iconPath = "{{ asset('images/FILE ICON.png') }}"; break;
-                    }
-
-                    fileIcon.src = iconPath;
-                    fileIcon.style.display = "inline";
-                } else {
-                    fileLabel.textContent = "Belum dipilih";
-                    fileIcon.style.display = "none";
-                }
-            });
-        }
-
-        function isTab1Valid() {
-            const requiredInputs = document.querySelectorAll("#tab-1 .input-field");
-            const requiredFiles = document.querySelectorAll("#tab-1 input[type='file']");
-
-            let allInputsFilled = Array.from(requiredInputs).every(input => input.value.trim() !== "");
-            let allFilesUploaded = Array.from(requiredFiles).every(file => file.files.length > 0);
-
-            return allInputsFilled && allFilesUploaded;
-        }
-
-        function isValidFile(fileName, allowedExtensions) {
-            const ext = fileName.split('.').pop().toLowerCase();
-            return allowedExtensions.includes(ext);
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            showTab(0);
-
-            document.querySelectorAll(".upload-btn").forEach((btn) => {
-                const fileInput = btn.nextElementSibling;
-                const fileContainer = btn.previousElementSibling;
-                const textField = fileContainer.querySelector(".file-input");
-                const removeBtn = fileContainer.querySelector(".remove-file");
-
-                // Tombol Upload: Buka file picker
-                btn.addEventListener("click", () => {
-                    fileInput.click();
-                });
-
-                // Saat file dipilih
-                fileInput.addEventListener("change", () => {
-                    if (fileInput.files.length > 0) {
-                        const fileName = fileInput.files[0].name;
-                        const allowedExtensions = fileInput.accept.split(',').map(ext => ext.replace('.', '').toLowerCase());
-
-                        if (isValidFile(fileName, allowedExtensions)) {
-                            textField.value = fileName;
-                            textField.classList.remove("error-file");
-                            textField.classList.add("has-file");
-                            removeBtn.style.display = "inline";
-                        } else {
-                            textField.value = fileName + " ❌ File tidak valid!";
-                            textField.classList.add("error-file");
-                            textField.classList.add("has-file");
-                            removeBtn.style.display = "inline";
-                        }
-                    }
-                });
-
-                // Tombol silang untuk menghapus file
-                removeBtn.addEventListener("click", () => {
-                    fileInput.value = "";
-                    textField.value = "";
-                    textField.classList.remove("error-file", "has-file");
-                    removeBtn.style.display = "none";
+                    // Kirim data ke backend
+                    fetch('/kirim-detail', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            jenis_izin: jenisIzin,
+                            tanggal_ajukan: tglAjukan,
+                            tanggal_selesai: tglSelesai,
+                            catatan: catatan
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert("Perizinan berhasil dikirim ke user dan laporan admin!");
+                        window.location.href = "/admin/laporan"; // redirect opsional
+                    })
+                    .catch(error => {
+                        console.error("Gagal mengirim data:", error);
+                        alert("Terjadi kesalahan saat mengirim data.");
+                    });
                 });
             });
-
-            // ✅ Tambahkan event listener untuk tombol Send
-            document.querySelector(".send-btn").addEventListener("click", () => {
-                if (!isTab1Valid()) {
-                    alert("Harap lengkapi semua input dan unggah semua dokumen terlebih dahulu.");
-                    return;
-                }
-
-                alert("Perizinan berhasil dikirim!");
-            });
-        });
-    </script>
+        </script>
     </body>
     </html>

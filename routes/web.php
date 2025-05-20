@@ -17,26 +17,42 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/berandaadmin', [BerandaAdminController::class, 'index'])
     ->name('berandaadmin.index');
+
 Route::get('/dataperizinanadmin', [DataPerizinanAdminController::class, 'index'])
     ->name('dataperizinanadmin.index');
+Route::post('/dataperizinanadmin/store', [dataperizinanadmincontroller::class, 'store'])
+    ->name('dataperizinanadmin.store');
+
 Route::get('/detailvalidasiadmin', [detailvalidasiadmincontroller::class, 'index'])
     ->name('/detailvalidasiadmin.index');
+
 Route::get('/detailprocessadmin', [detailprocessadmincontroller::class, 'index'])
     ->name('/detailprocessadmin.index');
+
 Route::get('/detailditerimaadmin', [detailditerimaadmincontroller::class, 'index'])
     ->name('/detailditerimaadmin.index');
+
 Route::get('/detailditolakadmin', [detailditolakadmincontroller::class, 'index'])
     ->name('/detailditolakadmin.index');
-Route::get('/detaildoneadmin', [detaildoneadmincontroller::class, 'index'])
-    ->name('/detaildoneadmin.index');
+
+Route::get('/detaildoneadmin', [DetailDoneAdminController::class, 'index'])
+    ->name('detaildoneadmin.index');
+Route::get('/admin/detaildoneadmin', [DetailDoneAdminController::class, 'index'])
+    ->name('detaildoneadmin.index');
+Route::post('/detaildoneadmin/store', [detaildoneadmincontroller::class, 'store'])
+    ->name('detaildoneadmin.store');
+Route::get('/detaildoneadmin/{id}', [detaildoneadmincontroller::class, 'show'])
+    ->name('detaildoneadmin.show');
+Route::put('/detaildoneadmin/{id}', [detaildoneadmincontroller::class, 'update'])
+    ->name('detaildoneadmin.update');
+Route::delete('/detaildoneadmin/{id}', [detaildoneadmincontroller::class, 'destroy'])
+    ->name('detaildoneadmin.destroy');
+
+
 Route::get('/laporancetakadmin', [laporancetakadmincontroller::class, 'index'])
     ->name('laporancetakadmin.index');
-
 Route::get('/laporancetakadmin/download-pdf', [LaporanExportController::class, 'downloadPDF'])
     ->name('laporancetakadmin.downloadpdf');
-
 Route::get('/laporancetakadmin/print-pdf', [LaporanExportController::class, 'printPDF'])
     ->name('laporancetakadmin.printpdf');
 
-Route::get('/laporancetakadmin/download-excel', [LaporanExportController::class, 'downloadExcel'])
-    ->name('laporancetakadmin.downloadexcel');
