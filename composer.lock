@@ -4,6 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
+<<<<<<< HEAD
     "content-hash": "0b0c4631c1b1ec53f669f4cff84a3587",
     "packages": [
         {
@@ -84,6 +85,11 @@
             "time": "2025-02-13T15:07:54+00:00"
         },
         {
+=======
+    "content-hash": "e5fbbe6137dc77bcd5b6646b5dd75b52",
+    "packages": [
+        {
+>>>>>>> e3f7a5525ba945598a89b5ed7c702ad05ff68e31
             "name": "brick/math",
             "version": "0.12.3",
             "source": {
@@ -456,6 +462,7 @@
             "time": "2024-02-05T11:56:58+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "dompdf/dompdf",
             "version": "v3.1.0",
             "source": {
@@ -611,6 +618,8 @@
             "time": "2024-04-29T13:26:35+00:00"
         },
         {
+=======
+>>>>>>> e3f7a5525ba945598a89b5ed7c702ad05ff68e31
             "name": "dragonmantank/cron-expression",
             "version": "v3.4.0",
             "source": {
@@ -2239,6 +2248,7 @@
             "time": "2024-12-08T08:18:47+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "maatwebsite/excel",
             "version": "v1.1.5",
             "source": {
@@ -2365,6 +2375,8 @@
             "time": "2024-03-31T07:05:07+00:00"
         },
         {
+=======
+>>>>>>> e3f7a5525ba945598a89b5ed7c702ad05ff68e31
             "name": "monolog/monolog",
             "version": "3.8.1",
             "source": {
@@ -2867,6 +2879,7 @@
             "time": "2024-11-21T10:39:51+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "phpoffice/phpexcel",
             "version": "1.8.1",
             "source": {
@@ -2929,6 +2942,8 @@
             "time": "2015-05-01T07:00:55+00:00"
         },
         {
+=======
+>>>>>>> e3f7a5525ba945598a89b5ed7c702ad05ff68e31
             "name": "phpoption/phpoption",
             "version": "1.9.3",
             "source": {
@@ -3707,6 +3722,7 @@
             "time": "2024-04-27T21:32:50+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "sabberworm/php-css-parser",
             "version": "v8.8.0",
             "source": {
@@ -3772,6 +3788,8 @@
             "time": "2025-03-23T17:59:05+00:00"
         },
         {
+=======
+>>>>>>> e3f7a5525ba945598a89b5ed7c702ad05ff68e31
             "name": "symfony/clock",
             "version": "v7.2.0",
             "source": {
