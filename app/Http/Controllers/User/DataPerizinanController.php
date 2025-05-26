@@ -4,7 +4,14 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\DataPerizinan;
+// use Illuminate\Http\Request;
 use Illuminate\Http\Request;
+use App\Http\Requests\{
+    Step1Request,
+    Step2GisRequest,
+    Step3UploadDokumenRequest,
+    Step4ProyekRequest
+};
 
 class DataPerizinanController extends Controller
 {
@@ -19,10 +26,9 @@ class DataPerizinanController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        return view('user.formPerizinan.formStepper');
-    }
+
+
+    public function create() {}
 
     /**
      * Store a newly created resource in storage.

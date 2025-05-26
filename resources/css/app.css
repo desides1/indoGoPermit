@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @source "../node_modules/flowbite-datepicker";
 @source "../views";
-
 @theme {
     --color-primary: #52b69a;
 }

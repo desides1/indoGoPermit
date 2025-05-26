@@ -10,8 +10,8 @@ class Request extends Model
 
     protected $fillable = [
         'request_type',
-        'permit_type_id_request_type',
-        'request_number_id_request_number',
+        'permit_type_id',
+        'request_number_id',
     ];
 
     public function permitType()

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->date('valid_until')->nullable();
             $table->enum('status', ['fill', 'unfill']);
             $table->string('file_path');
+            $table->boolean('no_expiry')->default(false);
             $table->foreignId('requirement_id')->constrained('requirement', 'id_requirement');
             $table->timestamps();
         });

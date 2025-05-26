@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PermissionType extends Model
 {
+    protected $table = 'permission_type';
     protected $primaryKey = 'id_permission_type';
 
     protected $fillable = [

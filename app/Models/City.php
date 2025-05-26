@@ -6,15 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class City extends Model
 {
+    protected $table = 'city';
     protected $primaryKey = 'id_city';
 
     protected $fillable = [
         'name',
-        'subdistrict_id_subdistrict',
+        'id_province',
     ];
 
-    public function subdistrict()
+    public function province()
     {
-        return $this->belongsTo(Subdistric::class, 'subdistrict_id_subdistrict', 'id_subdistrict');
+        return $this->belongsTo(Province::class, 'id_province', 'id_province');
     }
 }

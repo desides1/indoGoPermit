@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('province', function (Blueprint $table) {
             $table->id('id_province');
             $table->string('name');
-            $table->foreignId('city_id')->constrained('city', 'id_city');
             $table->timestamps();
         });
     }

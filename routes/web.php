@@ -7,6 +7,7 @@ use App\Http\Controllers\User\RequestController;
 use App\Http\Controllers\User\PermissionTypeController;
 use App\Http\Controllers\User\LocationController;
 use App\Http\Controllers\User\DataPerizinanController;
+use App\Http\Controllers\User\FormStepper;
 use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\User\ProfileController; // Ensure this matches the actual namespace of ProfileController
 // Removed unused imports
@@ -25,8 +26,27 @@ Route::middleware(['guest'])->group(function () {
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/perizinan', [DataPerizinanController::class, 'index'])->name('perizinan');
-Route::get('/add-data', [DataPerizinanController::class, 'create'])->name('data-permissions.create');
+
+//for permission type select
 Route::get('/permission', [PermissionTypeController::class, 'index'])->name('permission');
+Route::post('/permission', [PermissionTypeController::class, 'validate'])->name('permission.validate');
+
+// For stepper form
+Route::get('/addData/{step?}', [FormStepper::class, 'create'])->name('addData');
+Route::post('/addData/{step?}', [FormStepper::class, 'store'])->name('addData.store');
+
+// For fetching data
+Route::post('/fetch-city', [FormStepper::class, 'fetchCity']);
+Route::post('/fetch-subdistrict', [FormStepper::class, 'fetchSubdistrict']);
+// Dropdown AJAX
+// Route::post('/fetch-city', [FormStepper::class, 'fetchCity'])->name('fetch.city');
+// Route::post('/fetch-subdistric', [FormStepper::class, 'fetchSubdistric'])->name('fetch.subdistric');
+// Route::post('/addData/{step?}', [FormStepper::class, 'store'])->name('addData');
+
+// Route::get('/add-data', [FormStepper::class, 'getStepData'])->name('addData');
+
+// Route::get('/perizinan-data', [FormStepper::class, 'index'])->name('addData');
+// Route::get('/add-data', [FormStepper::class, 'getStepData'])->name('addData');
 Route::get('/request-permit-store', [RequestController::class, 'index'])->name('request');
 Route::get('/add-location', [LocationController::class, 'index'])->name('data-location.index');
 Route::post('/add-location-store', [LocationController::class, 'store'])->name('data-location.store');

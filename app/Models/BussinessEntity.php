@@ -22,15 +22,16 @@ class BussinessEntity extends Model
         'village',
         'postal_code',
         'detail_address',
-        'province_id_province',
-        'city_id_city',
-        'subdistric_id_subdistric1',
+        'id_province',
+        'id_city',
+        'id_subdistric',
     ];
 
     public function province()
     {
         return $this->belongsTo(Province::class, 'province_id_province', 'id_province');
     }
+
 
     public function city()
     {

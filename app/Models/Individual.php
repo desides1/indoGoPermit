@@ -22,9 +22,9 @@ class Individual extends Model
         'postal_code',
         'detail_address',
         'date_of_bird',
-        'province_id_province',
-        'city_id_city',
-        'subdistric_id_subdistric',
+        'id_province',
+        'id_city',
+        'id_subdistric',
     ];
 
     public function province()
