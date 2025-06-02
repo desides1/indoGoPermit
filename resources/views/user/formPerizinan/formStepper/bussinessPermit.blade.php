@@ -41,7 +41,7 @@
             </div>
             <div class="">
                 <label for="city" class="block font-medium text-gray-700 mt-4">Kota/Kabupaten</label>
-                <select id="city-dropdown-business" class="city-dropdown" name="city"
+                <select id="city-dropdown-business" name="city"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-300 focus:border-gray-300 block w-full p-2.5">
                     <option value="" selected>Pilih kota/kabupaten</option>
                 </select>

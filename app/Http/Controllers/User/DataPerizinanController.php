@@ -12,6 +12,7 @@ use App\Http\Requests\{
     Step3UploadDokumenRequest,
     Step4ProyekRequest
 };
+use App\Models\Perizinan;
 
 class DataPerizinanController extends Controller
 {
@@ -20,7 +21,7 @@ class DataPerizinanController extends Controller
      */
     public function index()
     {
-        return view('user.berandaDataPerizinan');
+        return view('user.berandaDataPerizinan', ['permissions' => Perizinan::all()]);
     }
 
     /**
@@ -41,7 +42,7 @@ class DataPerizinanController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(DataPerizinan $dataPerizinan)
+    public function show(Perizinan $dataPerizinan)
     {
         //
     }
@@ -49,7 +50,7 @@ class DataPerizinanController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(DataPerizinan $dataPerizinan)
+    public function edit(Perizinan $dataPerizinan)
     {
         //
     }
@@ -57,7 +58,7 @@ class DataPerizinanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, DataPerizinan $dataPerizinan)
+    public function update(Request $request, Perizinan $dataPerizinan)
     {
         //
     }
@@ -65,7 +66,7 @@ class DataPerizinanController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(DataPerizinan $dataPerizinan)
+    public function destroy(Perizinan $dataPerizinan)
     {
         //
     }

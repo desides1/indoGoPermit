@@ -69,94 +69,87 @@ class FormStepper extends Controller
      */
     public function store(Request $request, $step)
     {
-        dd($request->all());
-        $step = (int) $step;
-
-        // switch ($step) {
-        //     case 1:
-        //         $validated = app(Step1Request::class)->validated();
-        //         session(['permit.step1' => $validated]);
-        //         break;
-
-        //     case 2:
-        //         $validated = app(Step2Gis::class)->validated();
-        //         session(['permit.step2' => $validated]);
-        //         break;
-
-        //     case 3:
-        //         if ($request->input('typeRequester') === 'individual') {
-        //             $validated = app(Step3Individual::class)->validated();
-        //             session(['permit.step3' => ['type' => 'individual'] + $validated]);
-        //         } elseif ($request->input('typeRequester') === 'business') {
-        //             $validated = app(Step3Bussiness::class)->validated();
-        //             session(['permit.step3' => ['type' => 'business'] + $validated]);
-        //         }
-        //         break;
-
-        //     case 4:
-        //         $validated = app(Step4Document::class)->validated();
-        //         $path = $request->file('document_izin')->store('document-temp');
-        //         session(['permit.step4' => array_merge($validated, ['file_path' => $path])]);
-        //         break;
-
-        //     case 5:
-        //         $validated = app(Step5Proyek::class)->validated();
-        //         session(['permit.step5' => $validated]);
-
-        //         $all = session('permit');
-
-        //         DB::beginTransaction();
-        //         try {
-        //             $step1 = Request::create($all['step1']);
-        //             $step2 = Location::create($all['step2']);
-
-        //             $individualId = null;
-        //             $businessId = null;
-        //             if (isset($all['individual'])) {
-        //                 $individual = Individual::create($all['individual']);
-        //                 $individualId = $individual->id;
-        //             } elseif (isset($all['business'])) {
-        //                 $business = BussinessEntity::create($all['business']);
-        //                 $businessId = $business->id;
-        //             }
-        //             // $step4 = DocumentRequirements::create([
-        //             //     ...$all['step4'],
-        //             //     'file_path' => $all['step4']['file_path'],
-        //             // ]);
-        //             $step4 = DocumentRequirements::create($all['document']);
-        //             $step5 = Project::create($all['project']);
-
-        //             // Simpan ke tabel utama: permits
-        //             Perizinan::create([
-        //                 'step1_id' => $step1->id,
-        //                 'step2_id' => $step2->id,
-        //                 'individual_id' => $individualId,
-        //                 'business_id' => $businessId,
-        //                 'step4_id' => $step4->id,
-        //                 'step5_id' => $step5->id,
-        //             ]);
-
-        //             DB::commit();
-        //             session()->forget('permit');
-        //             return redirect()->route('perizinan')->with('success', 'Data berhasil disimpan!');
-        //         } catch (\Exception $e) {
-        //             DB::rollBack();
-        //             return back()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
-        //         }
-        // }
+        $perizinan = new Perizinan([
+            'user_id' => auth()->id,
+            'permission_type_id' => $request->get('jenisIzin'),
+        ]);
+        // dd($request->all());
 
 
+        switch ($step) {
+            case 'request':
+                $validated = app(Step1Request::class)->validated();
+                session(['permit.step1' => $validated]);
+                break;
 
-        // // Pindah ke step berikutnya
-        // $nextStep = $this->steps[array_search($step, $this->steps) + 1] ?? null;
-        // return redirect()->route('addData', ['step' => $nextStep]);
+            case 'gis':
+                $validated = app(Step2Gis::class)->validated();
+                session(['permit.step2' => $validated]);
+                break;
+
+            case 'typeRequester':
+                if ($request->input('typeRequester') === 'individual') {
+                    $validated = app(Step3Individual::class)->validated();
+                    session(['permit.step3' => ['type' => 'individual'] + $validated]);
+                } elseif ($request->input('typeRequester') === 'business') {
+                    $validated = app(Step3Bussiness::class)->validated();
+                    session(['permit.step3' => ['type' => 'business'] + $validated]);
+                }
+                break;
+
+            case 'document':
+                $validated = app(Step4Document::class)->validated();
+                $path = $request->file('document_izin')->store('document-temp');
+                session(['permit.step4' => array_merge($validated, ['file_path' => $path])]);
+                break;
+
+            case 'project':
+                $validated = app(Step5Proyek::class)->validated();
+                session(['permit.step5' => $validated]);
+
+                $all = session('permit');
+
+                DB::beginTransaction();
+                try {
+                    $step1 = Request::create($all['step1']);
+                    $step2 = Location::create($all['step2']);
+
+                    $individualId = null;
+                    $businessId = null;
+                    if (isset($all['individual'])) {
+                        $individual = Individual::create($all['individual']);
+                        $individualId = $individual->id;
+                    } elseif (isset($all['business'])) {
+                        $business = BussinessEntity::create($all['business']);
+                        $businessId = $business->id;
+                    }
+                    // $step4 = DocumentRequirements::create([
+                    //     ...$all['step4'],
+                    //     'file_path' => $all['step4']['file_path'],
+                    // ]);
+                    $step4 = DocumentRequirements::create($all['document']);
+                    $step5 = Project::create($all['project']);
+
+                    // Simpan ke tabel utama: permits
+                    Perizinan::create([
+                        'step1_id' => $step1->id,
+                        'step2_id' => $step2->id,
+                        'individual_id' => $individualId,
+                        'business_id' => $businessId,
+                        'step4_id' => $step4->id,
+                        'step5_id' => $step5->id,
+                    ]);
+
+                    DB::commit();
+                    session()->forget('permit');
+                    return redirect()->route('perizinan')->with('success', 'Data berhasil disimpan!');
+                } catch (\Exception $e) {
+                    DB::rollBack();
+                    return back()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
+                }
+        }
     }
 
-    // public function province()
-    // {
-    //     $data['province'] = Province::get(['name', 'id_province']);
-    //     return response()->json($data);
-    // }
 
     public function fetchCity(Request $request)
     {

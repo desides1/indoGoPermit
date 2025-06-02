@@ -3,6 +3,7 @@
 @section('title', 'Homepage')
 
 @section('content-primary')
+
     <section class="bg-primary dark:bg-primary">
         <div class="flex flex-col items-center justify-center px-6 mx-auto ">
             <div class=" bg-white rounded-lg shadow md:my-22 sm:max-w-md xl:p-0 max-w-full">
@@ -79,5 +80,7 @@
         </div>
 
     </section>
+
+
 
 @endsection

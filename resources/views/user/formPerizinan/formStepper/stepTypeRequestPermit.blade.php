@@ -26,11 +26,11 @@
 
     <!-- Formulir yang muncul sesuai pilihan -->
     <div x-show="selectedOption === 'individual'" class="mt-6">
-        @include('user.formPerizinan.formStepper.bussinessPermit')
+        @include('user.formPerizinan.formStepper.individualPermit')
     </div>
 
     <div x-show="selectedOption === 'business'" class="mt-6">
-        @include('user.formPerizinan.formStepper.individualPermit')
+        @include('user.formPerizinan.formStepper.bussinessPermit')
     </div>
 </div>
 
@@ -53,10 +53,14 @@
                         },
                         dataType: 'json',
                         success: function(result) {
+                            const selectedCityId = $('#selected-city-id').val();
                             $.each(result.city, function(key, value) {
+                                let selectedAttr = (value.id_city == selectedCityId) ?
+                                    'selected' : '';
                                 $("#city-dropdown-individual").append(
-                                    '<option value="' + value.id_city + '">' + value
-                                    .name + '</option>');
+                                    '<option value="' + value.id_city + '" ' +
+                                    selectedAttr + '>' + value.name + '</option>'
+                                );
                             });
                         }
                     });

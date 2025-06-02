@@ -9,11 +9,11 @@
                     Proyek</label>
                 <select id="large" name="permitType"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-300 focus:border-gray-300 block w-full p-2.5 ">
-                    <option selected>Pilih Jenis Permohonan</option>
-                    <option value="Baru">Baru</option>
-                    <option value="Perpanjangan">Perpanjangan</option>
-                    <option value="Perubahan">Perubahan</option>
-                    <option value="Pencabutan">Pencabutan</option>
+                    <option selected>Pilih Jenis Proyek</option>
+                    <option value="PMA">PMA</option>
+                    <option value="PMDN">PMDN</option>
+                    <option value="Non Fasilitas">Non Fasilitas</option>
+
                 </select>
             </div>
             <div class="">
