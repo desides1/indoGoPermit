@@ -1,4 +1,5 @@
 <div class="step-content" data-step="2" x-data="{ selectedOption: '' }">
+    <input type="hidden" name="typeRequester" :value="selectedOption">
     <h1 class="text-primary font-bold text-2xl">TIPE PEMOHON</h1>
     <p class="mb-4">Pilih Tipe Pemohon</p>
 

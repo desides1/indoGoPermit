@@ -51,30 +51,41 @@
                 <div class="space-y-6">
 
                     <div x-show="currentSteps === 1">
+                        <input type="hidden" name="current_step" :value="step">
                         @yield('step-1')
                     </div>
 
                     <div x-show="currentSteps === 2">
+                        <input type="hidden" name="current_step" :value="step">
                         @yield('step-2')
                     </div>
 
                     <div x-show="currentSteps === 3">
+                        <input type="hidden" name="current_step" :value="step">
                         @yield('step-3')
                     </div>
 
                     <div x-show="currentSteps === 4">
+                        <input type="hidden" name="current_step" :value="step">
                         @yield('step-4')
                     </div>
 
                     <div x-show="currentSteps === 5">
+                        <input type="hidden" name="current_step" :value="step">
                         @yield('step-5')
                     </div>
-
+                    <input type="hidden" name="current_step" :value="step">
                     <!-- Navigation Buttons -->
                     <div class="flex justify-between mt-4">
                         <button type="button" @click="prev"
                             class="btn bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-lg"
                             x-show="currentSteps > 1">Back</button>
+
+
+                        <button type="submit" name="action" value="draft" class="bg-yellow-400 px-4 py-2 rounded">
+                            Save Draft
+                        </button>
+
 
                         <button type="button" @click="next"
                             class="btn bg-primary hover:bg-primary-600 text-white px-4 py-2 rounded-lg"

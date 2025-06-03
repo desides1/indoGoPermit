@@ -69,84 +69,109 @@ class FormStepper extends Controller
      */
     public function store(Request $request, $step)
     {
-        $perizinan = new Perizinan([
-            'user_id' => auth()->id,
-            'permission_type_id' => $request->get('jenisIzin'),
-        ]);
-        // dd($request->all());
-
-
         switch ($step) {
-            case 'request':
-                $validated = app(Step1Request::class)->validated();
-                session(['permit.step1' => $validated]);
+            case 1:
+                // Validasi dan simpan data step 1 ke tabel, misal: requests
+                RequestModel::create($request->only(['field1', 'field2']));
                 break;
 
-            case 'gis':
-                $validated = app(Step2Gis::class)->validated();
-                session(['permit.step2' => $validated]);
+            case 2:
+                // Validasi dan simpan data step 2 ke tabel, misal: gis
+                Gis::create($request->only(['lat', 'lon']));
                 break;
 
-            case 'typeRequester':
-                if ($request->input('typeRequester') === 'individual') {
-                    $validated = app(Step3Individual::class)->validated();
-                    session(['permit.step3' => ['type' => 'individual'] + $validated]);
-                } elseif ($request->input('typeRequester') === 'business') {
-                    $validated = app(Step3Bussiness::class)->validated();
-                    session(['permit.step3' => ['type' => 'business'] + $validated]);
-                }
+            case 3:
+                // Simpan data step 3, misal: type_requesters
+                TypeRequester::create($request->only(['type']));
                 break;
 
-            case 'document':
-                $validated = app(Step4Document::class)->validated();
-                $path = $request->file('document_izin')->store('document-temp');
-                session(['permit.step4' => array_merge($validated, ['file_path' => $path])]);
-                break;
-
-            case 'project':
-                $validated = app(Step5Proyek::class)->validated();
-                session(['permit.step5' => $validated]);
-
-                $all = session('permit');
-
-                DB::beginTransaction();
-                try {
-                    $step1 = Request::create($all['step1']);
-                    $step2 = Location::create($all['step2']);
-
-                    $individualId = null;
-                    $businessId = null;
-                    if (isset($all['individual'])) {
-                        $individual = Individual::create($all['individual']);
-                        $individualId = $individual->id;
-                    } elseif (isset($all['business'])) {
-                        $business = BussinessEntity::create($all['business']);
-                        $businessId = $business->id;
-                    }
-                    // $step4 = DocumentRequirements::create([
-                    //     ...$all['step4'],
-                    //     'file_path' => $all['step4']['file_path'],
-                    // ]);
-                    $step4 = DocumentRequirements::create($all['document']);
-                    $step5 = Project::create($all['project']);
-
-                    // Simpan ke tabel utama: permits
-                    Perizinan::create([
-                        'step1_id' => $step1->id,
-                        'step2_id' => $step2->id,
-                        'individual_id' => $individualId,
-                        'business_id' => $businessId,
-                        'step4_id' => $step4->id,
-                        'step5_id' => $step5->id,
+            case 4:
+                // Simpan dokumen
+                if ($request->hasFile('document')) {
+                    $file = $request->file('document')->store('documents');
+                    Document::create([
+                        'filename' => $file,
+                        'description' => $request->input('description'),
                     ]);
-
-                    DB::commit();
-                    session()->forget('permit');
-                    return redirect()->route('perizinan')->with('success', 'Data berhasil disimpan!');
-                } catch (\Exception $e) {
-                    DB::rollBack();
-                    return back()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
                 }
+                break;
+
+            case 5:
+                // Simpan data project
+                Project::create($request->only(['name', 'location', 'budget']));
+                break;
+
+            default:
+                return back()->withErrors(['Invalid step.']);
+        }
+
+        return redirect()->back()->with('success', "Data step {$step} berhasil disimpan.");
+    }
+
+
+    public function finalize(Request $request)
+    {
+        // $permitData = session('permit');
+
+        // DB::beginTransaction();
+        // try {
+        //     // Example: create Location first
+        //     $location = Location::create($permitData['gis']);
+
+        //     // Create main Perizinan record
+        //     $perizinan = Perizinan::create([
+        //         // 'user_id' => auth()->id(),
+        //         'permission_type_id' => $permitData['request']['jenisIzin'],
+        //         'request_number_id' => $permitData['request']['nomorPermohonan'],
+        //         'location_id' => $location->id,
+        //         // ...other fields as needed
+        //     ]);
+
+        //     // Create related records (Individual/Business, Document, Project, etc.)
+        //     if ($permitData['typeRequester']['type'] === 'individual') {
+        //         Individual::create(array_merge($permitData['typeRequester'], ['perizinan_id' => $perizinan->id]));
+        //     } else {
+        //         BussinessEntity::create(array_merge($permitData['typeRequester'], ['perizinan_id' => $perizinan->id]));
+        //     }
+
+        //     // ...repeat for other steps (document, project, etc.)
+
+        //     DB::commit();
+        //     session()->forget('permit');
+        //     return redirect()->route('perizinan')->with('success', 'Permohonan berhasil dibuat.');
+        // } catch (\Exception $e) {
+        //     DB::rollBack();
+        //     return back()->withErrors(['error' => 'Terjadi kesalahan saat menyimpan data.']);
+        // }
+    }
+
+    protected function finalizePermit()
+    {
+        try {
+            DB::beginTransaction();
+            $permitData = session('permit');
+            $location = Location::create($permitData['gis']);
+            $perizinan = Perizinan::create([
+                'user_id' => auth()->id(),
+                'permission_type_id' => $permitData['request']['jenisIzin'],
+                'request_number_id' => $permitData['request']['nomorPermohonan'],
+                'location_id' => $location->id,
+                // Tambahkan field lain jika perlu
+            ]);
+            if ($permitData['typeRequester']['type'] === 'individual') {
+                Individual::create(array_merge($permitData['typeRequester'], ['perizinan_id' => $perizinan->id]));
+            } else {
+                BussinessEntity::create(array_merge($permitData['typeRequester'], ['perizinan_id' => $perizinan->id]));
+            }
+            DocumentRequirements::create(array_merge($permitData['document'], ['perizinan_id' => $perizinan->id]));
+            Project::create(array_merge($permitData['project'], ['perizinan_id' => $perizinan->id]));
+            DB::commit();
+            session()->forget('permit');
+            return redirect()->route('perizinan')->with('success', 'Permohonan berhasil dibuat.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error finalizing permit: ' . $e->getMessage());
+            return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan saat memproses permohonan.']);
         }
     }
 
