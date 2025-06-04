@@ -32,8 +32,8 @@ Route::get('/permission', [PermissionTypeController::class, 'index'])->name('per
 Route::post('/permission', [PermissionTypeController::class, 'validate'])->name('permission.validate');
 
 // For stepper form
-Route::get('/addData/{step?}', [FormStepper::class, 'create'])->name('addData');
-Route::post('/addData/{step?}', [FormStepper::class, 'store'])->name('addData.store');
+Route::get('/addData/{step?}', [FormStepper::class, 'index'])->name('addData');
+Route::post('/addData/store', [FormStepper::class, 'store'])->name('addData.store');
 
 // For fetching data
 Route::post('/fetch-city', [FormStepper::class, 'fetchCity']);

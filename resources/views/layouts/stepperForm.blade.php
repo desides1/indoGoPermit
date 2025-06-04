@@ -43,38 +43,33 @@
             </ol>
         </div>
 
-        <form id="multi-step-form" method="POST" action="{{ route('addData.store', ['step' => $currentStep]) }}"
-            x-data="stepForm" x-init="init()" class="space-y-6">
+        <form id="multi-step-form" method="POST" action="{{ route('addData.store') }}" x-data="stepForm"
+            x-init="init()" class="space-y-6">
             @csrf
-
+            <input type="hidden" name="current_step" :value="currentSteps">
             <div class="w-3/4 mx-auto p-6 bg-white">
                 <div class="space-y-6">
 
                     <div x-show="currentSteps === 1">
-                        <input type="hidden" name="current_step" :value="step">
                         @yield('step-1')
                     </div>
 
                     <div x-show="currentSteps === 2">
-                        <input type="hidden" name="current_step" :value="step">
                         @yield('step-2')
                     </div>
 
                     <div x-show="currentSteps === 3">
-                        <input type="hidden" name="current_step" :value="step">
                         @yield('step-3')
                     </div>
 
                     <div x-show="currentSteps === 4">
-                        <input type="hidden" name="current_step" :value="step">
                         @yield('step-4')
                     </div>
 
                     <div x-show="currentSteps === 5">
-                        <input type="hidden" name="current_step" :value="step">
                         @yield('step-5')
                     </div>
-                    <input type="hidden" name="current_step" :value="step">
+                    <input type="hidden" name="current_step" :value="currentSteps">
                     <!-- Navigation Buttons -->
                     <div class="flex justify-between mt-4">
                         <button type="button" @click="prev"

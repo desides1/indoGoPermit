@@ -21,7 +21,7 @@
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
                             <option value="" disabled selected>-- Pilih jenis perizinan --</option>
                             @foreach ($permitTypes as $type)
-                                <option value="{{ $type }}">{{ $type }}</option>
+                                <option value="{{ $type['id_permission_type'] }}">{{ $type['name'] }}</option>
                             @endforeach
                         </select>
 

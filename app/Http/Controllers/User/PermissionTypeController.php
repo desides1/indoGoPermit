@@ -2,22 +2,20 @@
 
 namespace App\Http\Controllers\User;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\PermissionType;
 use App\Http\Controllers\User\FormStepper;
+use App\Models\Perizinan;
+use App\Models\PermissionType;
+use App\Models\PermitType;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class PermissionTypeController extends Controller
 {
     public function index()
     {
-        $permitTypes = [
-            'Perizinan Pendidikan & Lembaga Kursus',
-            'Perizinan Pariwisata & Hiburan',
-            'Perizinan Kesehatan & Kecantikan',
-            'Perizinan Perbankan',
-            'Perizinan UMKM',
-        ];
+        $permitTypes = PermissionType::get(['id_permission_type', 'name']);
         return view('user.addDataPerizinan', compact('permitTypes'));
     }
 
@@ -28,12 +26,24 @@ class PermissionTypeController extends Controller
             'permitTypes' => 'required',
         ]);
 
-        PermissionType::create([
-            'name' => $request->get('permitTypes'),
-            'created_at' => now(),
-        ]);
+        // dd($validate['permitTypes']);
+
+        // $perizinanId = Perizinan::insertGetId([
+        //     'permission_type_id' => $request->get('permitTypes'),
+        //     'created_at' => now(),
+        //     'updated_at' => now(),
+        // ]);
+
+        // Save perizinanId to session
+        Session::put('permitTypes', $validate['permitTypes']);
+        // $permitTypes = session('permitTypes', $validate['permitTypes']);
+        // session(['permitTypes' => $validate[' permitTypes ']]);
+        Log::info('redirect');
+
+
+        // dd(session()->all());
         // Send validated data to FormStepperController
-        return redirect()->action([FormStepper::class, 'create'])->with('validatedData', $validate);
+        return redirect()->action([FormStepper::class, 'index']);
         // return redirect()->route('addData');
     }
 
@@ -43,7 +53,7 @@ class PermissionTypeController extends Controller
             'permit_type' => 'required|string|in:Perizinan Pendidikan & Lembaga Kursus,Perizinan Pariwisata & Hiburan,Perizinan Kesehatan & Kecantikan,Perizinan Perbankan,Perizinan UMKM'
         ]);
 
-        session(['permit_type' => $validateData['permit_type']]);
+        // session(['permit_type' => $validateData['permit_type']]);
         return redirect()->route('request')->with('success', 'Jenis perizinan berhasil dipilih!');
     }
 }
