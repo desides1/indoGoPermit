@@ -9,12 +9,11 @@ use App\Http\Requests\Step3Bussiness;
 use App\Http\Requests\Step3Individual;
 use App\Http\Requests\Step4Document;
 use App\Http\Requests\Step5Proyek;
-use App\Models\DocumentRequirements;
-use App\Models\Individual;
 use App\Models\BussinessEntity;
 use App\Models\City;
+use App\Models\DocumentRequirements;
+use App\Models\Individual;
 use App\Models\Location;
-use Illuminate\Http\Request;
 use App\Models\Perizinan;
 use App\Models\PermitType;
 use App\Models\Project;
@@ -22,35 +21,18 @@ use App\Models\Province;
 use App\Models\RequestNumber;
 use App\Models\Subdistric;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class FormStepper extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+    public function index($step = null)
     {
-
-        return view('user.formPerizinan.formStepper');
-        // return view('user.formPerizinan.formStepper', ['currentStep' => 1]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create($step = null)
-    {
-        // Get all request data, including data sent via redirect (old input/flash data)
-        $validatedData = session('validatedData', []);
-
-        // Define all steps
-        $steps = ['request', 'gis', 'typeRequester', 'document', 'project'];
-        $step = $step ?? $steps[0];
-
-        if (!in_array($step, $steps)) abort(404);
-
+        $premitTypes = session()->get('permitTypes');
+        // dd();
         // Fetch all data needed for all steps
         return view('user.formPerizinan.formStepper', [
             'currentStep' => $step,
@@ -64,48 +46,149 @@ class FormStepper extends Controller
         ]);
     }
 
+
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, $step)
+    public function store(Request $request)
     {
-        switch ($step) {
-            case 1:
-                // Validasi dan simpan data step 1 ke tabel, misal: requests
-                RequestModel::create($request->only(['field1', 'field2']));
-                break;
+        //Get the permit types from session
+        $premitTypes = session()->get('permitTypes');
 
-            case 2:
-                // Validasi dan simpan data step 2 ke tabel, misal: gis
-                Gis::create($request->only(['lat', 'lon']));
-                break;
+        try {
+            // dd($request->all());
+            // Validasi semua data dari langkah-langkah
+            $validatedData = $request->validate([
+                // Step 1: Data permohonan
+                'jenisPermohonan' => 'required|string|max:255',
+                'jenisIzin' => 'required|integer',
+                'nomorPermohonan' => 'required|string|max:255',
 
-            case 3:
-                // Simpan data step 3, misal: type_requesters
-                TypeRequester::create($request->only(['type']));
-                break;
+                // Step 2: Data GIS
+                'latitude' => 'required|numeric',
+                'longitude' => 'required|numeric',
+                'detail_address' => 'required',
+                'maps' => 'required|url',
 
-            case 4:
-                // Simpan dokumen
-                if ($request->hasFile('document')) {
-                    $file = $request->file('document')->store('documents');
-                    Document::create([
-                        'filename' => $file,
-                        'description' => $request->input('description'),
-                    ]);
-                }
-                break;
+                // Step 3: Data pemohon
+                'typeRequester' => 'required|string',
+                'name' => 'required|string|max:255',
+                'identityNumb' => 'required|string|max:255',
 
-            case 5:
-                // Simpan data project
-                Project::create($request->only(['name', 'location', 'budget']));
-                break;
+                // // Step 4: Data dokumen
+                // 'documentType' => 'string',
+                // 'documentFile' => 'file|mimes:pdf,jpg,png|max:2048',
 
-            default:
-                return back()->withErrors(['Invalid step.']);
+                // // Step 5: Data proyek
+                // 'projectName' => 'required|string|max:255',
+                // 'budget' => 'required|numeric',
+                // 'location' => 'required|string|max:255',
+            ]);
+            // Get session data for permit type
+            Log::info('Session permitTypes: ' . $premitTypes);
+            DB::beginTransaction();
+
+            // Simpan data Step 1 ke tabel `perizinan`
+            $perizinan = DB::table('perizinan')
+                ->insertGetId([
+                    'permission_type_id' => $premitTypes,
+                    'user_id' => 1,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+
+            Log::info('Perizinan data stored successfully.');
+
+            $requestData = DB::table('request')
+                ->insert([
+                    'request_type' => $validatedData['jenisPermohonan'],
+                    'request_type_id' => $validatedData['jenisIzin'],
+                    'request_number_id' => $validatedData['nomorPermohonan'],
+                    'perizinan_id' => $perizinan,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+
+            Log::info('Request data stored successfully.');
+
+            // Simpan data Step 2 ke tabel `location`
+            $location = DB::table('location')
+                ->insert([
+                    'latitude' => $validatedData['latitude'],
+                    'longitude' => $validatedData['longitude'],
+                    'detail_address' => $validatedData['detail_address'],
+                    'maps' => $validatedData['maps'],
+                    'perizinan_id' => $perizinan,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+
+            Log::info('Location data stored successfully.');
+
+            // Simpan data Step 3 ke tabel `individuals` atau `business_entities`
+            if ($validatedData['typeRequester'] === 'individual') {
+                DB::table('individuals')->insert([
+                    'identity_type' => $validatedData['identityNumber'],
+                    'number_identity' => $validatedData['identityNumber'],
+                    'name' => $validatedData['identityNumber'],
+                    'gender' => $validatedData['identityNumber'],
+                    'birthplace' => $validatedData['identityNumber'],
+                    'telephone_hp' => $validatedData['identityNumber'],
+                    'email' => $validatedData['identityNumber'],
+                    'job' => $validatedData['identityNumber'],
+                    'npwp_number' => $validatedData['identityNumber'],
+                    'village' => $validatedData['identityNumber'],
+                    'postal_code' => $validatedData['identityNumber'],
+                    'detail_address' => $validatedData['identityNumber'],
+                    'date_of_birth' => $validatedData['identityNumber'],
+                    'province_id' => $validatedData['identityNumber'],
+                    'city_id' => $validatedData['identityNumber'],
+                    'subdistrict_id' => $validatedData['identityNumber'],
+                    // 'user_id' => auth()->id(),
+                    'perizinan_id' => $perizinan,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            } else {
+                DB::table('business_entities')->insert([
+                    'identity_number' => $validatedData['identityNumber'],
+                    // 'user_id' => auth()->id(),
+                    'perizinan_id' => $perizinan,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+
+            // Simpan data Step 4 ke tabel `documents`
+            // $filePath = $request->file('documentFile')->store('documents');
+            // DB::table('documents')->insert([
+            //     'type' => $validatedData['documentType'],
+            //     'file_path' => $filePath,
+            //     'user_id' => auth()->id(),
+            //     'perizinan_id' => $perizinan,
+            //     'created_at' => now(),
+            //     'updated_at' => now(),
+            // ]);
+
+            // Simpan data Step 5 ke tabel `projects`
+            // DB::table('projects')->insert([
+            //     'name' => $validatedData['projectName'],
+            //     'budget' => $validatedData['budget'],
+            //     'location' => $validatedData['location'],
+            //     'user_id' => auth()->id(),
+            //     'perizinan_id' => $perizinan,
+            //     'created_at' => now(),
+            //     'updated_at' => now(),
+            // ]);
+
+            DB::commit();
+            log::info('Data successfully stored in the database.');
+            return redirect()->route('perizinan')->with('success', 'Data berhasil disimpan dan permohonan selesai.');
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('Error storing data: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Terjadi kesalahan saat menyimpan data.']);
         }
-
-        return redirect()->back()->with('success', "Data step {$step} berhasil disimpan.");
     }
 
 
