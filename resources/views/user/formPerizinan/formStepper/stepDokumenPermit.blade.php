@@ -53,7 +53,8 @@
             {{ $requirement->name }}
         </h3>
 
-        <input type="hidden" name="requirement_ids[{{ $requirement->name }}]" value="{{ $requirement->id_requirement }}">
+        <input type="hidden" name="data[{{ $requirement->id_requirement }}][requirement_id]"
+            value="{{ $requirement->id_requirement }}">
 
         <!-- Upload File -->
         <div class="space-y-2">
@@ -65,7 +66,7 @@
                     <label class="block text-sm font-medium text-gray-700 pb-4" for="file_">Unggah
                         Dokumen</label>
                     <input id="file_{{ $requirement->id_requirement }}" type="file" multiple
-                        name="files[{{ $requirement->id_requirement }}][]" accept="application/pdf" required
+                        name="files[{{ $requirement->id_requirement }}]" accept="application/pdf" required
                         class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 ">
                     <p class="mt-1 text-sm text-gray-500">File harus bertipe PDF</p>
                 </div>
@@ -86,29 +87,32 @@
         <div class="grid grid-cols-3 gap-2">
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Nomor Dokumen</label>
-                <input type="text" name="numbers[]"
+                <input type="text" name="data[{{ $requirement->id_requirement }}][number]"
                     class="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" />
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Mulai</label>
-                <x-datepicker name="start_dates[]" required placeholder="Masa Berlaku" />
+                <x-datepicker name="data[{{ $requirement->id_requirement }}][start_date]" required
+                    placeholder="Masa Berlaku" />
             </div>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Berakhir</label>
-                <x-datepicker name="end_dates[]" required placeholder="Masa Berakhir" />
+                <x-datepicker name="data[{{ $requirement->id_requirement }}][end_date]" required
+                    placeholder="Masa Berakhir" />
             </div>
         </div>
 
         <!-- Status -->
         <div class="grid grid-cols-3 gap-4 mt-4">
             <div class="flex items-center gap-2">
-                <input type="checkbox" name="fulfilled[]"
+                <input type="checkbox" name="data[{{ $requirement->id_requirement }}][fulfilled]"
                     class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500" />
                 <span class="text-sm text-gray-700">Terpenuhi</span>
             </div>
 
             <div class="flex items-center gap-2">
-                <input type="checkbox" name="no_expiry[]" onchange="toggleDate(this, 'valid_until_')"
+                <input type="checkbox" name="data[{{ $requirement->id_requirement }}][no_expiry]"
+                    onchange="toggleDate(this, 'valid_until_')"
                     class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
                 <span class="text-sm text-gray-700">Tidak memiliki masa berlaku</span>
             </div>

@@ -18,12 +18,12 @@
                 <p class="pb-2">Jenis Kelamin</p>
                 <div class="flex">
                     <div class="flex items-center">
-                        <input id="default-radio-1" type="radio" value="Laki-laki" name="defaultRadio"
+                        <input id="default-radio-1" type="radio" value="Laki-laki" name="gender"
                             class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500">
                         <label for="default-radio-1" class="ms-2 text-sm font-medium text-gray-900">Laki-laki</label>
                     </div>
                     <div class="flex items-center ml-4">
-                        <input checked id="default-radio-2" type="radio" value="Perempuan" name="defaultRadio"
+                        <input checked id="default-radio-2" type="radio" value="Perempuan" name="gender"
                             class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500">
                         <label for="default-radio-2" class="ms-2 text-sm font-medium text-gray-900">Perempuan</label>
                     </div>
