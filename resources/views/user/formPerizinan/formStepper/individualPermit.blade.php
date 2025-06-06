@@ -10,20 +10,20 @@
                     class="input w-full p-2 border border-gray-300 rounded-md">
             </div>
             <div class="">
-                <label for="numberIdentity" class="block font-medium text-gray-700 mt-4">No. Identitas</label>
-                <input type="number_identity" id="numberIdentity" name="numberIdentity"
+                <label for="number_identity" class="block font-medium text-gray-700 mt-4">No. Identitas</label>
+                <input type="number_identity" id="number_identity" name="numberIdentity"
                     class="input w-full p-2 border border-gray-300 rounded-md">
             </div>
             <div class=" my-4 mb-7">
                 <p class="pb-2">Jenis Kelamin</p>
                 <div class="flex">
                     <div class="flex items-center">
-                        <input id="default-radio-1" type="radio" value="Laki-laki" name="gender"
+                        <input id="default-radio-1" type="radio" value="Laki-laki" name="defaultRadio"
                             class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500">
                         <label for="default-radio-1" class="ms-2 text-sm font-medium text-gray-900">Laki-laki</label>
                     </div>
                     <div class="flex items-center ml-4">
-                        <input checked id="default-radio-2" type="radio" value="Perempuan" name="gender"
+                        <input checked id="default-radio-2" type="radio" value="Perempuan" name="defaultRadio"
                             class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 focus:ring-primary-500">
                         <label for="default-radio-2" class="ms-2 text-sm font-medium text-gray-900">Perempuan</label>
                     </div>
@@ -36,27 +36,27 @@
                     class="input w-full p-2 border border-gray-300 rounded-md">
             </div>
             <div class="">
-                <label for="telpIndividual" class="block font-medium text-gray-700 mt-4">No. Telp/HP</label>
-                <input type="telp" id="telpIndividual" name="telpIndividual"
+                <label for="telp-individual" class="block font-medium text-gray-700 mt-4">No. Telp/HP</label>
+                <input type="telp" id="telp-individual" name="telpIndividual"
                     class="input w-full p-2 border border-gray-300 rounded-md">
             </div>
             <div class="">
-                <label for="emailIndividual" class="block font-medium text-gray-700 mt-4">Alamat
+                <label for="email-individual" class="block font-medium text-gray-700 mt-4">Alamat
                     Email-individual</label>
-                <input type="email" id="emailIndividual" name="emailIndividual"
+                <input type="email" id="email-individual" name="emailIndividual"
                     class="input w-full p-2 border border-gray-300 rounded-md">
             </div>
             <div class="">
                 <label for="city" class="block font-medium text-gray-700 mt-4">Kota/Kabupaten</label>
-                <select id="cityDropdownIndividual" name="cityDropdownIndividual"
+                <select id="city-dropdown-individual" name="cityDropdownIndividual"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-300 focus:border-gray-300 block w-full p-2.5">
                     <option value="" selected>Pilih kota/kabupaten</option>
                 </select>
-                <input type="hidden" id="selectedCityId" value="{{ old('city') ?? ($validatedData['city'] ?? '') }}">
+                <input type="hidden" id="selected-city-id" value="{{ old('city') ?? ($validatedData['city'] ?? '') }}">
             </div>
             <div class="">
-                <label for="villageIndividual" class="block font-medium text-gray-700 mt-4">Desa/Kelurahan</label>
-                <input type="text" id="villageIndividual" name="villageIndividual"
+                <label for="village-individual" class="block font-medium text-gray-700 mt-4">Desa/Kelurahan</label>
+                <input type="text" id="village-individual" name="villageIndividual"
                     class="input w-full p-2 border border-gray-300 rounded-md">
             </div>
         </div>
@@ -64,8 +64,8 @@
 
         <div class="">
             <div class="">
-                <label for="largeIdentity" class="block font-medium text-gray-700">Tipe Dokumen Identitas</label>
-                <select id="largeIdentity" name="identityType"
+                <label for="large identity" class="block font-medium text-gray-700">Tipe Dokumen Identitas</label>
+                <select id="large identity" name="identityType"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-300 focus:border-gray-300 block w-full p-2.5 ">
                     <option selected disabled>Pilih tipe identitas</option>
                     <option value="KTP">KTP</option>
@@ -91,7 +91,7 @@
 
             <div class="">
                 <label for="province" class="block font-medium text-gray-700 mt-4">Provinsi</label>
-                <select id="provinceDropdownIndividual" name="province"
+                <select id="province-dropdown-individual" name="province"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-300 focus:border-gray-300 block w-full p-2.5">
                     <option selected disabled>Pilih </option>
                     @foreach ($provinces as $province)
@@ -106,15 +106,16 @@
                     class="input w-full p-2 border border-gray-300 rounded-md">
             </div>
             <div class="">
-                <label for="postalIndividual" class="block font-medium text-gray-700 mt-4">Kode Pos</label>
-                <input type="text" id="postalIndividual" name="postalIndividual"
+                <label for="postal-individual" class="block font-medium text-gray-700 mt-4">Kode Pos</label>
+                <input type="text" id="postal-individual" name="postalIndividual"
                     class="input w-full p-2 border border-gray-300 rounded-md">
             </div>
             <div class="">
-                <label for="addressIndividual" class="block font-medium text-gray-700 mt-4">Alamat Lengkap</label>
-                <textarea type="text" id="addressIndividual" name="addressIndividual"
+                <label for="address-individual" class="block font-medium text-gray-700 mt-4">Alamat Lengkap</label>
+                <textarea type="text" id="address-individual" name="addressIndividual"
                     class="input w-full p-2 border border-gray-300 rounded-md"></textarea>
             </div>
         </div>
     </div>
+
 </div>

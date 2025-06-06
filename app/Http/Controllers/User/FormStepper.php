@@ -73,7 +73,21 @@ class FormStepper extends Controller
                 // Step 3: Data pemohon
                 'typeRequester' => 'required|string',
                 'name' => 'required|string|max:255',
-                'identityNumb' => 'required|string|max:255',
+                'numberIdentity' => 'required|string|max:255',
+                'defaultRadio' => 'required|string|max:255',
+                'birthPlace' => 'required|string|max:255',
+                'telpIndividual' => 'required|string|max:255',
+                'emailIndividual' => 'required|string|max:255',
+                'cityDropdownIndividual' => 'required|string|max:255',
+                'villageIndividual' => 'required|string|max:255',
+                'identityType' => 'required|string',
+                'npwp' => 'required|string|max:255',
+                'job' => 'required|string|max:255',
+                'dateOfBirth' => 'required|date',
+                'province' => 'required|string',
+                'subdistrict' => 'required|string|max:255',
+                'postalIndividual' => 'required|string|max:255',
+                'addressIndividual' => 'required|string|max:255',
 
                 // // Step 4: Data dokumen
                 // 'documentType' => 'string',
