@@ -3,16 +3,20 @@
     <h3 class="text-lg font-semibold text-gray-800">
         {{ $title }}
     </h3>
-
+    @foreach ($requirements as $requirement)
+        <input type="hidden" name="requirement_ids[{{ $requirement->name }}]" value="{{ $requirement->id }}">
+    @endforeach
     <!-- Upload File -->
     <div class="space-y-2">
 
         <div class="flex items-center gap-4">
+
             <!-- Tombol Upload -->
             <div class="max-w-md:w-1/2 w-full">
                 <label class="block text-sm font-medium text-gray-700 pb-4" for="multiple_files">Unggah Dokumen</label>
 
-                <input id="multiple_files" type="file" multiple
+                <input id="multiple_files" type="file" multiple name="{{ $documentName }}" accept="application/pdf"
+                    required
                     class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 ">
                 <p class="mt-1 text-sm text-gray-500 " id="file_input_help">File harus bertipe PDF</p>
             </div>

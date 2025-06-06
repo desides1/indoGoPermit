@@ -15,8 +15,11 @@ class DocumentRequirements extends Model
         'status',
         'file_path',
         'create_at',
-        'requirement_id_requirement',
+        'update_at',
+        'document_requirement_id',
+        'perizinan_id',
     ];
+
 
     public function requirement()
     {
