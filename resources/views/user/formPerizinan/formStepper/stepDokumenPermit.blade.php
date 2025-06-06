@@ -1,6 +1,7 @@
-<div class="step-content" data-step="5">
+{{-- <div class="step-content" data-step="5">
     <h1 class="text-primary font-bold text-2xl">DATA PERMOHONAN</h1>
     <p class="mb-4">Masukkan Informasi Data Pemohon</p>
+
 
     <x-card-document title="Akta Pendirian dan Perusahaan Non Perorangan" documentName="akta_document"
         startDateName="akta_start_date" endDateName="akta_end_date" documentLabel="Nomor Akta"
@@ -43,7 +44,80 @@
         endDateName="nib_end_date" documentLabel="Nomor NIB" startDateLabel="Tanggal Berlaku NIB"
         endDateLabel="Tanggal Berakhir NIB" />
 
-</div>
+</div> --}}
+
+@foreach ($requirements as $requirement)
+    <div class="bg-white rounded-xl shadow-md p-6 space-y-6 w-full mb-6">
+        <!-- Judul -->
+        <h3 class="text-lg font-semibold text-gray-800">
+            {{ $requirement->name }}
+        </h3>
+
+        <input type="hidden" name="requirement_ids[{{ $requirement->name }}]" value="{{ $requirement->id_requirement }}">
+
+        <!-- Upload File -->
+        <div class="space-y-2">
+            <div class="flex items-center gap-4">
+                <div class="max-w-md:w-1/2 w-full">
+                    {{-- @dd($requirement); --}}
+                    <span>{{ $requirement->id_requirement }}</span>
+
+                    <label class="block text-sm font-medium text-gray-700 pb-4" for="file_">Unggah
+                        Dokumen</label>
+                    <input id="file_{{ $requirement->id_requirement }}" type="file" multiple
+                        name="files[{{ $requirement->id_requirement }}][]" accept="application/pdf" required
+                        class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 ">
+                    <p class="mt-1 text-sm text-gray-500">File harus bertipe PDF</p>
+                </div>
+
+                <button type="button" onclick="document.getElementById('file_').value = ''"
+                    class="inline-flex items-center gap-2 text-red-600 hover:text-red-700 text-sm font-medium">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22" />
+                    </svg>
+                    Hapus
+                </button>
+            </div>
+        </div>
+
+        <!-- Nomor dan Tanggal -->
+        <div class="grid grid-cols-3 gap-2">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Nomor Dokumen</label>
+                <input type="text" name="numbers[]"
+                    class="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" />
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Mulai</label>
+                <x-datepicker name="start_dates[]" required placeholder="Masa Berlaku" />
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Berakhir</label>
+                <x-datepicker name="end_dates[]" required placeholder="Masa Berakhir" />
+            </div>
+        </div>
+
+        <!-- Status -->
+        <div class="grid grid-cols-3 gap-4 mt-4">
+            <div class="flex items-center gap-2">
+                <input type="checkbox" name="fulfilled[]"
+                    class="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500" />
+                <span class="text-sm text-gray-700">Terpenuhi</span>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <input type="checkbox" name="no_expiry[]" onchange="toggleDate(this, 'valid_until_')"
+                    class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+                <span class="text-sm text-gray-700">Tidak memiliki masa berlaku</span>
+            </div>
+        </div>
+
+        <p class="text-sm text-red-500">Dokumen wajib terpenuhi</p>
+    </div>
+@endforeach
+
 {{-- <div class="rounded-lg p-4 shadow-sm w-full bg-white mb-4">
         <h3 class="text-sm font-semibold">
             Nomor Induk Berusaha (NIB) </h3>

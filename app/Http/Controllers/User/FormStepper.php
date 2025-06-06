@@ -19,6 +19,7 @@ use App\Models\PermitType;
 use App\Models\Project;
 use App\Models\Province;
 use App\Models\RequestNumber;
+use App\Models\Requirement;
 use App\Models\Subdistric;
 use Exception;
 use Illuminate\Http\Request;
@@ -43,6 +44,8 @@ class FormStepper extends Controller
             'documentTypes' => ['SK', 'Rekomendasi', 'Proposal'],
             'projectCategories' => ['Pembangunan', 'Pengembangan', 'Rehabilitasi'],
             'options' => ['individual', 'business'],
+            'requirements' => Requirement::select('id_requirement', 'name')->get(),
+
         ]);
     }
 
@@ -71,32 +74,31 @@ class FormStepper extends Controller
                 'maps' => 'required|url',
 
                 // Step 3: Data pemohon
-                'typeRequester' => 'required|string',
+                'typeRequester' => 'required|string|max:255|in:individual,business',
+                'identity_type' => 'required|string|max:255|in:KTP,SIM,Passport',
+                'number_identity' => 'required|string|max:50',
                 'name' => 'required|string|max:255',
-                'numberIdentity' => 'required|string|max:255',
-                'defaultRadio' => 'required|string|max:255',
-                'birthPlace' => 'required|string|max:255',
-                'telpIndividual' => 'required|string|max:255',
+                'gender' => 'required|string|max:10|in:Laki-laki,Perempuan',
+                'birthplace' => 'required|string|max:255',
+                'telpIndividual' => 'required|string|max:15',
                 'emailIndividual' => 'required|string|max:255',
-                'cityDropdownIndividual' => 'required|string|max:255',
+                'job' => 'required|string|max:25',
+                'npwp_number' => 'required|string|max:50',
                 'villageIndividual' => 'required|string|max:255',
-                'identityType' => 'required|string',
-                'npwp' => 'required|string|max:255',
-                'job' => 'required|string|max:255',
-                'dateOfBirth' => 'required|date',
-                'province' => 'required|string',
+                'postalIndividual' => 'required|string|max:10',
+                'date_of_birth' => 'required|date_format:Y-m-d',
                 'subdistrict' => 'required|string|max:255',
-                'postalIndividual' => 'required|string|max:255',
                 'addressIndividual' => 'required|string|max:255',
 
-                // // Step 4: Data dokumen
+                // Step 4: Data dokumen
                 // 'documentType' => 'string',
                 // 'documentFile' => 'file|mimes:pdf,jpg,png|max:2048',
 
-                // // Step 5: Data proyek
-                // 'projectName' => 'required|string|max:255',
-                // 'budget' => 'required|numeric',
-                // 'location' => 'required|string|max:255',
+                // Step 5: Data proyek
+                'project_type' => 'required|string|max:255|in:PMA,PMDN,Non Fasilitas',
+                'investment_value' => 'required|numeric',
+                'target_pad' => 'required|numeric',
+                'total_employee' => 'required|integer',
             ]);
             // Get session data for permit type
             Log::info('Session permitTypes: ' . $premitTypes);
@@ -139,25 +141,27 @@ class FormStepper extends Controller
 
             Log::info('Location data stored successfully.');
 
+
+
             // Simpan data Step 3 ke tabel `individuals` atau `business_entities`
             if ($validatedData['typeRequester'] === 'individual') {
-                DB::table('individuals')->insert([
-                    'identity_type' => $validatedData['identityNumber'],
-                    'number_identity' => $validatedData['identityNumber'],
-                    'name' => $validatedData['identityNumber'],
-                    'gender' => $validatedData['identityNumber'],
-                    'birthplace' => $validatedData['identityNumber'],
-                    'telephone_hp' => $validatedData['identityNumber'],
-                    'email' => $validatedData['identityNumber'],
-                    'job' => $validatedData['identityNumber'],
-                    'npwp_number' => $validatedData['identityNumber'],
-                    'village' => $validatedData['identityNumber'],
-                    'postal_code' => $validatedData['identityNumber'],
-                    'detail_address' => $validatedData['identityNumber'],
-                    'date_of_birth' => $validatedData['identityNumber'],
-                    'province_id' => $validatedData['identityNumber'],
-                    'city_id' => $validatedData['identityNumber'],
-                    'subdistrict_id' => $validatedData['identityNumber'],
+                DB::table('individual')->insert([
+                    'identity_type' => $validatedData['identity_type'],
+                    'number_identity' => $validatedData['number_identity'],
+                    'name' => $validatedData['name'],
+                    'gender' => $validatedData['gender'],
+                    'birthplace' => $validatedData['birthplace'],
+                    'telephone_hp' => $validatedData['telpIndividual'],
+                    'email' => $validatedData['emailIndividual'],
+                    'job' => $validatedData['job'],
+                    'npwp_number' => $validatedData['npwp_number'],
+                    'village' => $validatedData['villageIndividual'],
+                    'postal_code' => $validatedData['postalIndividual'],
+                    'date_of_birth' => $validatedData['date_of_birth'],
+                    'province_id' => $request->input('province'),
+                    'city_id' => $request->input('cityDropdownIndividual'),
+                    'subdistrict' => $validatedData['subdistrict'],
+                    'detail_address' => $validatedData['addressIndividual'],
                     // 'user_id' => auth()->id(),
                     'perizinan_id' => $perizinan,
                     'created_at' => now(),
@@ -173,27 +177,51 @@ class FormStepper extends Controller
                 ]);
             }
 
+            Log::info('Individual or Business Entity data stored successfully.');
+
+
+            // dd($request->input('requirement_ids'));
             // Simpan data Step 4 ke tabel `documents`
-            // $filePath = $request->file('documentFile')->store('documents');
-            // DB::table('documents')->insert([
-            //     'type' => $validatedData['documentType'],
-            //     'file_path' => $filePath,
-            //     'user_id' => auth()->id(),
-            //     'perizinan_id' => $perizinan,
-            //     'created_at' => now(),
-            //     'updated_at' => now(),
-            // ]);
+            // foreach ($request->input('requirement_ids', []) as $name => $requirementId) {
+            //     // $fileInputName = $name . '_file';
+            //     $fileInputName = 'file_' . $requirementId;
+            //     $validatedData['documentType'] = $request->input($name . '_documentType');
+
+
+            //     if ($request->hasFile($fileInputName)) {
+            //         $file = $request->file($fileInputName);
+            //         $filePath = $file->store('public/pdfs');
+            //         // $filePath = $request->file('documentFile')->store('public/pdfs');
+            //         $documents = DB::table('document_requirements')->insert([
+            //             'document_number' => $validatedData['documentType'],
+            //             'valid_until' => $validatedData['validUntil'],
+            //             'no_expired' => $validatedData['noExpired'],
+            //             'status' => $validatedData['status'],
+            //             'file_path' => $filePath,
+            //             'requirement_id' => $requirementId,
+            //             // 'user_id' => auth()->id(),
+            //             'perizinan_id' => $perizinan,
+            //             'created_at' => now(),
+            //             'updated_at' => now(),
+            //         ]);
+            //     }
+            // }
+
+
+            Log::info('Document Requirements data stored successfully.');
 
             // Simpan data Step 5 ke tabel `projects`
-            // DB::table('projects')->insert([
-            //     'name' => $validatedData['projectName'],
-            //     'budget' => $validatedData['budget'],
-            //     'location' => $validatedData['location'],
-            //     'user_id' => auth()->id(),
-            //     'perizinan_id' => $perizinan,
-            //     'created_at' => now(),
-            //     'updated_at' => now(),
-            // ]);
+            $project =  DB::table('project')->insert([
+                'project_type' => $validatedData['project_type'],
+                'investment_value' => $validatedData['investment_value'],
+                'target_pad' => $validatedData['target_pad'],
+                'total_employee' => $validatedData['total_employee'],
+                'perizinan_id' => $perizinan,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            Log::info('Project data stored successfully.');
 
             DB::commit();
             log::info('Data successfully stored in the database.');
@@ -202,73 +230,6 @@ class FormStepper extends Controller
             DB::rollBack();
             Log::error('Error storing data: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Terjadi kesalahan saat menyimpan data.']);
-        }
-    }
-
-
-    public function finalize(Request $request)
-    {
-        // $permitData = session('permit');
-
-        // DB::beginTransaction();
-        // try {
-        //     // Example: create Location first
-        //     $location = Location::create($permitData['gis']);
-
-        //     // Create main Perizinan record
-        //     $perizinan = Perizinan::create([
-        //         // 'user_id' => auth()->id(),
-        //         'permission_type_id' => $permitData['request']['jenisIzin'],
-        //         'request_number_id' => $permitData['request']['nomorPermohonan'],
-        //         'location_id' => $location->id,
-        //         // ...other fields as needed
-        //     ]);
-
-        //     // Create related records (Individual/Business, Document, Project, etc.)
-        //     if ($permitData['typeRequester']['type'] === 'individual') {
-        //         Individual::create(array_merge($permitData['typeRequester'], ['perizinan_id' => $perizinan->id]));
-        //     } else {
-        //         BussinessEntity::create(array_merge($permitData['typeRequester'], ['perizinan_id' => $perizinan->id]));
-        //     }
-
-        //     // ...repeat for other steps (document, project, etc.)
-
-        //     DB::commit();
-        //     session()->forget('permit');
-        //     return redirect()->route('perizinan')->with('success', 'Permohonan berhasil dibuat.');
-        // } catch (\Exception $e) {
-        //     DB::rollBack();
-        //     return back()->withErrors(['error' => 'Terjadi kesalahan saat menyimpan data.']);
-        // }
-    }
-
-    protected function finalizePermit()
-    {
-        try {
-            DB::beginTransaction();
-            $permitData = session('permit');
-            $location = Location::create($permitData['gis']);
-            $perizinan = Perizinan::create([
-                'user_id' => auth()->id(),
-                'permission_type_id' => $permitData['request']['jenisIzin'],
-                'request_number_id' => $permitData['request']['nomorPermohonan'],
-                'location_id' => $location->id,
-                // Tambahkan field lain jika perlu
-            ]);
-            if ($permitData['typeRequester']['type'] === 'individual') {
-                Individual::create(array_merge($permitData['typeRequester'], ['perizinan_id' => $perizinan->id]));
-            } else {
-                BussinessEntity::create(array_merge($permitData['typeRequester'], ['perizinan_id' => $perizinan->id]));
-            }
-            DocumentRequirements::create(array_merge($permitData['document'], ['perizinan_id' => $perizinan->id]));
-            Project::create(array_merge($permitData['project'], ['perizinan_id' => $perizinan->id]));
-            DB::commit();
-            session()->forget('permit');
-            return redirect()->route('perizinan')->with('success', 'Permohonan berhasil dibuat.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('Error finalizing permit: ' . $e->getMessage());
-            return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan saat memproses permohonan.']);
         }
     }
 

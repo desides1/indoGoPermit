@@ -44,7 +44,7 @@
         </div>
 
         <form id="multi-step-form" method="POST" action="{{ route('addData.store') }}" x-data="stepForm"
-            x-init="init()" class="space-y-6">
+            x-init="init()" class="space-y-6" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="current_step" :value="currentSteps">
             <div class="w-3/4 mx-auto p-6 bg-white">

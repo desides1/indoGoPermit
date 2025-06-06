@@ -11,7 +11,7 @@
             </div>
             <div class="">
                 <label for="number_identity" class="block font-medium text-gray-700 mt-4">No. Identitas</label>
-                <input type="number_identity" id="number_identity" name="numberIdentity"
+                <input type="number_identity" id="number_identity" name="number_identity"
                     class="input w-full p-2 border border-gray-300 rounded-md">
             </div>
             <div class=" my-4 mb-7">
@@ -30,9 +30,9 @@
                 </div>
             </div>
             <div class="">
-                <label for="birthPlace" class="block font-medium text-gray-700 mt-4">Tempat
+                <label for="birthplace" class="block font-medium text-gray-700 mt-4">Tempat
                     Lahir(Kota)</label>
-                <input type="text" id="birthPlace" name="birthPlace"
+                <input type="text" id="birthplace" name="birthplace"
                     class="input w-full p-2 border border-gray-300 rounded-md">
             </div>
             <div class="">
@@ -52,7 +52,7 @@
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-300 focus:border-gray-300 block w-full p-2.5">
                     <option value="" selected>Pilih kota/kabupaten</option>
                 </select>
-                <input type="hidden" id="selected-city-id" value="{{ old('city') ?? ($validatedData['city'] ?? '') }}">
+                {{-- <input type="hidden" name="city" id="selectedCityId" value="{{ old('city') }}"> --}}
             </div>
             <div class="">
                 <label for="village-individual" class="block font-medium text-gray-700 mt-4">Desa/Kelurahan</label>
@@ -64,8 +64,8 @@
 
         <div class="">
             <div class="">
-                <label for="large identity" class="block font-medium text-gray-700">Tipe Dokumen Identitas</label>
-                <select id="large identity" name="identityType"
+                <label for="identity_type" class="block font-medium text-gray-700">Tipe Dokumen Identitas</label>
+                <select id="largeIdentity" name="identity_type"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-300 focus:border-gray-300 block w-full p-2.5 ">
                     <option selected disabled>Pilih tipe identitas</option>
                     <option value="KTP">KTP</option>
@@ -74,8 +74,8 @@
                 </select>
             </div>
             <div class="">
-                <label for="npwp" class="block font-medium text-gray-700 mt-4">No. Npwp</label>
-                <input type="text" id="npwp" name="npwp"
+                <label for="npwp_number" class="block font-medium text-gray-700 mt-4">No. Npwp</label>
+                <input type="text" id="npwp_number" name="npwp_number"
                     class="input w-full p-2 border border-gray-300 rounded-md">
             </div>
             <div class="">
@@ -84,8 +84,8 @@
                     class="input w-full p-2 border border-gray-300 rounded-md">
             </div>
             <div class="">
-                <label for="dateOfBirth" class="block font-medium text-gray-700 mt-4">Tanggal Lahir</label>
-                <input type="date" id="dateOfBirth" name="dateOfBirth"
+                <label for="date_of_birth" class="block font-medium text-gray-700 mt-4">Tanggal Lahir</label>
+                <input type="date" id="date_of_birth" name="date_of_birth"
                     class="input w-full p-2 border border-gray-300 rounded-md">
             </div>
 
