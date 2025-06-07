@@ -183,26 +183,50 @@ class FormStepper extends Controller
             // dd($request->input('requirement_ids'));
             // Simpan data Step 4 ke tabel `documents`
 
+            // pan pan
+            // foreach ($request->file('files', []) as $requirementId => $file) {
+            //     $filePath = $file->store('public/pdfs');
+
+            //     $input = $request->input("data.$requirementId", []);
+
+            //     DB::table('document_requirements')->insert([
+            //         'document_requirement_id'  => $requirementId,
+            //         'document_number' => $input['number'] ?? null,
+            //         'start_date'      => $input['start_date'] ?? null,
+            //         'valid_until'     => isset($input['no_expiry']) ? null : ($input['end_date'] ?? null),
+            //         'no_expiry'      => isset($input['no_expiry']),
+            //         'status'          => isset($input['fulfilled']),
+            //         'file_path'       => $filePath,
+            //         'perizinan_id'    => $perizinan, // pastikan variabel ini disiapkan
+            //         'created_at'      => now(),
+            //         'updated_at'      => now(),
+            //     ]);
+            // }
 
             foreach ($request->file('files', []) as $requirementId => $file) {
+                // Pastikan file ada dan valid
+                if (!$file || !$file->isValid()) {
+                    continue;
+                }
+
+                // Simpan file ke storage dan dapatkan path-nya
                 $filePath = $file->store('public/pdfs');
 
+                // Ambil input lain berdasarkan ID requirement
                 $input = $request->input("data.$requirementId", []);
 
                 DB::table('document_requirements')->insert([
-                    'document_requirement_id'  => $requirementId,
-                    'document_number' => $input['number'] ?? null,
-                    'start_date'      => $input['start_date'] ?? null,
-                    'valid_until'     => isset($input['no_expiry']) ? null : ($input['end_date'] ?? null),
-                    'no_expiry'      => isset($input['no_expiry']),
-                    'status'          => isset($input['fulfilled']),
-                    'file_path'       => $filePath,
-                    'perizinan_id'    => $perizinan, // pastikan variabel ini disiapkan
-                    'created_at'      => now(),
-                    'updated_at'      => now(),
+                    'document_requirement_id' => $requirementId,
+                    'document_number'         => $input['number'] ?? null,
+                    'valid_until'             => isset($input['no_expiry']) ? null : ($input['end_date'] ?? null),
+                    'no_expiry'               => isset($input['no_expiry']),
+                    'status'                  => isset($input['fulfilled']),
+                    'file_path'               => $filePath,
+                    'perizinan_id'            => $perizinan, // variabel ini pastikan sudah diisi
+                    'created_at'              => now(),
+                    'updated_at'              => now(),
                 ]);
             }
-
 
 
 

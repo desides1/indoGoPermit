@@ -65,7 +65,7 @@
 
                     <label class="block text-sm font-medium text-gray-700 pb-4" for="file_">Unggah
                         Dokumen</label>
-                    <input id="file_{{ $requirement->id_requirement }}" type="file" multiple
+                    <input id="file_{{ $requirement->id_requirement }}" type="file"
                         name="files[{{ $requirement->id_requirement }}]" accept="application/pdf" required
                         class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 ">
                     <p class="mt-1 text-sm text-gray-500">File harus bertipe PDF</p>
@@ -165,3 +165,20 @@
             </div>
         </div>
     </div> --}}
+
+@push('script')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            flatpickr(".flatpickr-input", {
+                dateFormat: "Y-m-d",
+                allowInput: true,
+            });
+        });
+    </script>
+    <script>
+        function hapusFile() {
+            const fileInput = document.getElementById('multiple_files');
+            fileInput.value = ''; // Menghapus semua file yang dipilih
+        }
+    </script>
+@endpush
