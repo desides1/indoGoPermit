@@ -4,24 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laporan & Dokumen Cetak</title>
-    <link rel="stylesheet" href="{{ asset('css/admin/laporancetakadmin.css')}}">
+    <link rel="stylesheet" href="{{ asset('css/admin/laporancetakadmin.css') }}">
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="logo">
-            <img src="{{asset('images/LOGO INDOGOPERMIT.png')}}" alt="Logo IndoGoPermit">
-            <h2></h2>
+            <img src="{{ asset('images/LOGO INDOGOPERMIT.png') }}" alt="Logo IndoGoPermit">
         </div>
         <ul>
-            <li>
-                <a href="{{ route('berandaadmin.index') }}"> 🏠 Beranda </a>
-            </li>
-            <li>
-                <a href="{{ route('dataperizinanadmin.index') }}">📂 Data Perizinan</a>
-            </li>
-            <li class="active">📄 Laporan & Dokumen cetak</li>
+            <li><a href="{{ route('berandaadmin.index') }}">🏠 Beranda</a></li>
+            <li><a href="{{ route('dataperizinanadmin.index') }}">📂 Data Perizinan</a></li>
+            <li class="active">📄 Laporan & Dokumen Cetak</li>
             <li>⚙️ Setting</li>
         </ul>
     </div>
@@ -31,10 +26,9 @@
         <div class="header">
             <h1>Laporan & Dokumen Cetak</h1>
             <div class="icons">
-                🔔 👤
                 <i class="fas fa-bell"></i>
                 <i class="fas fa-user"></i>
-                <i class="fas fa-pen"></i> <!-- Icon edit -->
+                <i class="fas fa-pen"></i>
             </div>
         </div>
 
@@ -49,17 +43,15 @@
                     🔍
                     <input type="text" id="searchInput" placeholder="Ketikkan...">
                 </div>
-
                 <div class="status-filter">
-                <label for="filterStatus">Status:</label>
-                <select id="filterStatus">
-                    <option value="">Semua</option>
-                    <option value="Disetujui">Disetujui</option>
-                    <option value="Ditolak">Ditolak</option>
-                    <option value="Selesai">Selesai</option>
-                </select>
-            </div>
-
+                    <label for="filterStatus">Status:</label>
+                    <select id="filterStatus">
+                        <option value="">Semua</option>
+                        <option value="Disetujui">Disetujui</option>
+                        <option value="Ditolak">Ditolak</option>
+                        <option value="Selesai">Selesai</option>
+                    </select>
+                </div>
                 <button class="filter-btn" id="resetBtn">🔄 Reset</button>
             </div>
 
@@ -77,45 +69,27 @@
                         </tr>
                     </thead>
                     <tbody id="laporanTable">
+                        @foreach ($data as $index => $izin)
                         <tr>
-                            <td>1</td>
-                            <td>LIVIA DEWI</td>
-                            <td>Baru</td>
-                            <td>Disetujui</td>
-                            <td>10/03/2025</td>
-                            <td>17/03/2025</td>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $izin->nama_pemohon }}</td>
+                            <td>{{ $izin->jenis_izin }}</td>
+                            <td>{{ $izin->status }}</td>
+                            <td>{{ \Carbon\Carbon::parse($izin->tanggal_pengajuan)->format('d/m/Y') }}</td>
+                            <td>
+                                @if ($izin->status === 'selesai')
+                                    {{ $izin->tanggal_selesai ? \Carbon\Carbon::parse($izin->tanggal_selesai)->format('d/m/Y') : now()->format('d/m/Y') }}
+                                @else
+                                    -
+                                @endif
+                            </td>
                             <td class="aksi-col">
-                                <button class="btn-action">👁️ Lihat</button>
-                                <button class="btn-action">📥 Download PDF</button>
-                                <button class="btn-action">🖨️ Cetak</button>
+                                <button class="btn-action printRow">🖨️ Cetak</button>
+                                <button class="btn-action pdfRow">📥 PDF</button>
+                                <button class="btn-action viewRow">👁️ Lihat</button>
                             </td>
                         </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>MARYANA ROSALINA</td>
-                            <td>Perpanjangan</td>
-                            <td>Ditolak</td>
-                            <td>22/02/2025</td>
-                            <td>28/02/2025</td>
-                            <td class="aksi-col">
-                                <button class="btn-action">👁️ Lihat</button>
-                                <button class="btn-action">📥 Download PDF</button>
-                                <button class="btn-action">🖨️ Cetak</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>VANIA</td>
-                            <td>Perubahan</td>
-                            <td>Selesai</td>
-                            <td>13/03/2025</td>
-                            <td>20/03/2025</td>
-                            <td class="aksi-col">
-                                <button class="btn-action">👁️ Lihat</button>
-                                <button class="btn-action">📥 Download PDF</button>
-                                <button class="btn-action">🖨️ Cetak</button>
-                            </td>
-                        </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -126,30 +100,31 @@
             </div>
 
             <div class="pagination">
-                <span class="pagination-text">Rows per page:</span>
+                <span>Rows per page:</span>
                 <select>
                     <option>8</option>
                     <option>16</option>
                     <option>32</option>
                 </select>
-                <span class="pagination-text">1-8 of 1240</span>
-                <span class="prev">⬅️</span> <!-- Ikon panah kiri -->
-                <span class="next">➡️</span> <!-- Ikon panah kanan -->
+                <span>1-8 of {{ count($data) }}</span>
+                <span class="prev">⬅️</span>
+                <span class="next">➡️</span>
             </div>
         </div>
+    </div>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
-        <script>
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
         document.addEventListener("DOMContentLoaded", function () {
             const searchInput = document.getElementById('searchInput');
+            const filterStatus = document.getElementById('filterStatus');
             const resetBtn = document.getElementById('resetBtn');
             const tableBody = document.getElementById('laporanTable');
-            const filterStatus = document.getElementById('filterStatus');
 
             function filterRows() {
                 const searchText = searchInput.value.toLowerCase().trim();
-                const selectedStatus = filterStatus.value.toLowerCase().trim();
+                const statusFilter = filterStatus.value.toLowerCase().trim();
                 const rows = tableBody.querySelectorAll('tr');
 
                 rows.forEach(row => {
@@ -157,157 +132,74 @@
                     const jenis = row.children[2].textContent.toLowerCase();
                     const status = row.children[3].textContent.toLowerCase();
 
-                    const matchesSearch =
-                        searchText === "" ||
-                        nama.includes(searchText) ||
-                        jenis.includes(searchText) ||
-                        status.includes(searchText);
+                    const matchSearch = !searchText || nama.includes(searchText) || jenis.includes(searchText);
+                    const matchStatus = !statusFilter || status.includes(statusFilter);
 
-                    const matchesStatus =
-                        selectedStatus === "" ||
-                        status.includes(selectedStatus);
-
-                    row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
+                    row.style.display = (matchSearch && matchStatus) ? '' : 'none';
                 });
             }
 
-            if (searchInput && tableBody) {
-                searchInput.addEventListener('keyup', filterRows);
-            }
+            searchInput.addEventListener('keyup', filterRows);
+            filterStatus.addEventListener('change', filterRows);
 
-            if (filterStatus && tableBody) {
-                filterStatus.addEventListener('change', filterRows);
-            }
-
-            resetBtn.addEventListener('click', function () {
+            resetBtn.addEventListener('click', () => {
                 searchInput.value = '';
                 filterStatus.value = '';
-                const rows = tableBody.querySelectorAll('tr');
-                rows.forEach(row => row.style.display = '');
+                filterRows();
             });
 
-            // Cetak Semua
-            document.getElementById('printAll').addEventListener('click', function () {
-                const tableContent = document.querySelector('.table-container').cloneNode(true);
-                tableContent.querySelectorAll('tr').forEach(row => {
-                    if (row.cells.length > 0) {
-                        row.deleteCell(row.cells.length - 1); // Hapus kolom aksi
-                    }
+            // Cetak semua
+            document.getElementById('printAll').addEventListener('click', () => {
+                const printArea = document.querySelector('.table-container').cloneNode(true);
+                printArea.querySelectorAll('tr').forEach(row => {
+                    if (row.cells.length > 6) row.deleteCell(6); // remove aksi
                 });
 
-                const printWindow = window.open('', '_blank');
-                printWindow.document.write('<html><head><title>Cetak Laporan</title></head><body>');
-                printWindow.document.write('<h2>Laporan Perizinan</h2>');
-                printWindow.document.write(tableContent.outerHTML);
-                printWindow.document.write('</body></html>');
-                printWindow.document.close();
-                printWindow.print();
+                const win = window.open('', '_blank');
+                win.document.write('<html><head><title>Cetak</title></head><body>');
+                win.document.write('<h2>Laporan Perizinan</h2>');
+                win.document.write(printArea.innerHTML);
+                win.document.write('</body></html>');
+                win.print();
+                win.close();
             });
 
-            // Download PDF Semua
-            document.getElementById('downloadPDFAll').addEventListener('click', function () {
+            // Download PDF semua
+            document.getElementById('downloadPDFAll').addEventListener('click', () => {
                 const element = document.querySelector('.table-container').cloneNode(true);
                 element.querySelectorAll('tr').forEach(row => {
-                    if (row.cells.length > 0) {
-                        row.deleteCell(row.cells.length - 1); // Hapus kolom aksi
-                    }
+                    if (row.cells.length > 6) row.deleteCell(6);
                 });
-
                 html2pdf().from(element).save("laporan-semua.pdf");
             });
 
-            // Download Excel Semua
-            document.getElementById('downloadExcelAll').addEventListener('click', function () {
-                const table = document.querySelector('.table-container table').cloneNode(true);
-                table.querySelectorAll('tr').forEach(row => {
-                    if (row.cells.length > 0) {
-                        row.deleteCell(row.cells.length - 1); // Hapus kolom aksi
-                    }
+            // Cetak per baris
+            document.querySelectorAll('.printRow').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const row = btn.closest('tr').cloneNode(true);
+                    row.deleteCell(6);
+                    const win = window.open('', '_blank');
+                    win.document.write('<html><head><title>Cetak Baris</title></head><body>');
+                    win.document.write('<table border="1"><thead><tr><th>NO</th><th>NAMA PEMOHON</th><th>JENIS IZIN</th><th>STATUS</th><th>TGL PENGAJUAN</th><th>TGL SELESAI</th></tr></thead>');
+                    win.document.write('<tbody>' + row.outerHTML + '</tbody></table>');
+                    win.document.write('</body></html>');
+                    win.print();
+                    win.close();
                 });
-
-                let tableHTML = table.outerHTML.replace(/ /g, '%20');
-                const filename = 'laporan-semua.xls';
-                const dataType = 'application/vnd.ms-excel';
-
-                const downloadLink = document.createElement('a');
-                document.body.appendChild(downloadLink);
-                downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
-                downloadLink.download = filename;
-                downloadLink.click();
-                document.body.removeChild(downloadLink);
             });
 
-            // Tombol aksi per baris
-            document.querySelectorAll('.btn-action').forEach(btn => {
-                // Cetak Per Baris
-                if (btn.textContent.includes('🖨️')) {
-                    btn.addEventListener('click', function () {
-                        const row = this.closest('tr');
-                        const clonedRow = row.cloneNode(true);
-                        clonedRow.removeChild(clonedRow.lastElementChild); // Hapus kolom aksi
-
-                        const printWindow = window.open('', '_blank');
-                        printWindow.document.write('<html><head><title>Cetak Laporan</title></head><body>');
-                        printWindow.document.write('<h2>Laporan Perizinan</h2>');
-                        printWindow.document.write('<table border="1"><thead><tr>' +
-                            '<th>NO</th><th>NAMA PEMOHON</th><th>JENIS IZIN</th>' +
-                            '<th>STATUS</th><th>TANGGAL PENGAJUAN</th><th>TANGGAL SELESAI</th></tr></thead><tbody>');
-                        printWindow.document.write('<tr>' + clonedRow.innerHTML + '</tr>');
-                        printWindow.document.write('</tbody></table></body></html>');
-                        printWindow.document.close();
-                        printWindow.print();
-                    });
-                }
-
-                // Download PDF Per Baris
-                if (btn.textContent.includes('📥')) {
-                    btn.addEventListener('click', function () {
-                        const row = this.closest('tr');
-                        const clonedRow = row.cloneNode(true);
-                        clonedRow.removeChild(clonedRow.lastElementChild); // Hapus kolom aksi
-
-                        const wrapper = document.createElement('div');
-                        wrapper.innerHTML = `
-                            <h2>Laporan Perizinan</h2>
-                            <table border="1">
-                                <thead>
-                                    <tr>
-                                        <th>NO</th>
-                                        <th>NAMA PEMOHON</th>
-                                        <th>JENIS IZIN</th>
-                                        <th>STATUS</th>
-                                        <th>TANGGAL PENGAJUAN</th>
-                                        <th>TANGGAL SELESAI</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        `;
-
-                        wrapper.querySelector('tbody').appendChild(clonedRow);
-
-                        html2pdf().from(wrapper).set({
-                            margin: 1,
-                            filename: 'laporan-perizinan.pdf',
-                            html2canvas: { scale: 2 },
-                            jsPDF: { unit: 'cm', format: 'a4', orientation: 'portrait' }
-                        }).save();
-
-                        // Excel
-                        const tableHTML = wrapper.querySelector('table').outerHTML.replace(/ /g, '%20');
-                        const filename = 'laporan-per-baris.xls';
-                        const dataType = 'application/vnd.ms-excel';
-
-                        const downloadLink = document.createElement('a');
-                        document.body.appendChild(downloadLink);
-                        downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
-                        downloadLink.download = filename;
-                        downloadLink.click();
-                        document.body.removeChild(downloadLink);
-                    });
-                }
+            // Download PDF per baris
+            document.querySelectorAll('.pdfRow').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const row = btn.closest('tr').cloneNode(true);
+                    row.deleteCell(6);
+                    const table = document.createElement('table');
+                    table.border = 1;
+                    table.appendChild(row);
+                    html2pdf().from(table).save("laporan-baris.pdf");
+                });
             });
         });
-        </script>
-    </body>
-    </html>
+    </script>
+</body>
+</html>

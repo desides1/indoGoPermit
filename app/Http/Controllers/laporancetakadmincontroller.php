@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\LaporanCetakDokumen;
-use App\Models\Perizinan;
+use App\Models\DataPerizinan;
 
 class laporancetakadmincontroller extends Controller
 {
     // Menampilkan data perizinan dengan status tertentu
     public function index()
     {
-        $data = Perizinan::whereIn('status', ['accepted', 'rejected', 'done'])->get();
+        $data = DataPerizinan::whereIn('status', ['Disetujui', 'Ditolak', 'Selesai'])->get();
         return view('admin.laporancetakadmin', compact('data'));
     }
 

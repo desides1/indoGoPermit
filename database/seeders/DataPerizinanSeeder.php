@@ -1,15 +1,14 @@
 <?php
 
 namespace Database\Seeders;
-
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\DataPerizinan;
 
-class PerizinanSeeder extends Seeder
+class DataPerizinanSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('perizinan')->insert([
+        $data = [
             [
                 'foto_pemohon' => 'user.png',
                 'nama_pemohon' => 'Charlie Kristen',
@@ -17,8 +16,6 @@ class PerizinanSeeder extends Seeder
                 'status' => 'waiting',
                 'tanggal_pengajuan' => '2023-02-12',
                 'file_dokumen' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'foto_pemohon' => 'user.png',
@@ -27,8 +24,6 @@ class PerizinanSeeder extends Seeder
                 'status' => 'accepted',
                 'tanggal_pengajuan' => '2023-02-11',
                 'file_dokumen' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'foto_pemohon' => 'user.png',
@@ -37,8 +32,6 @@ class PerizinanSeeder extends Seeder
                 'status' => 'rejected',
                 'tanggal_pengajuan' => '2023-01-10',
                 'file_dokumen' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'foto_pemohon' => 'user.png',
@@ -47,8 +40,6 @@ class PerizinanSeeder extends Seeder
                 'status' => 'done',
                 'tanggal_pengajuan' => '2022-12-08',
                 'file_dokumen' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'foto_pemohon' => 'user.png',
@@ -57,8 +48,6 @@ class PerizinanSeeder extends Seeder
                 'status' => 'process',
                 'tanggal_pengajuan' => '2023-02-07',
                 'file_dokumen' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'foto_pemohon' => 'user.png',
@@ -67,9 +56,11 @@ class PerizinanSeeder extends Seeder
                 'status' => 'rejected',
                 'tanggal_pengajuan' => '2023-03-09',
                 'file_dokumen' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
-        ]);
+        ];
+
+        foreach ($data as $entry) {
+            DataPerizinan::create($entry);
+        }
     }
 }

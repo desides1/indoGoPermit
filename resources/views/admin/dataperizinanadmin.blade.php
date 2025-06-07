@@ -99,71 +99,23 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="user-cell">
-                            <img src="avatar1.png" alt="User">
-                            <span>Charlie Kristen</span>
-                        </td>
-                        <td>New</td>
-                        <td class="status waiting">Waiting For Validation</td>
-                        <td>12/02/23</td>
-                        <td class="action-buttons">
-                            <a href="/detailvalidasiadmin" class="detail-btn">Detail</a>
-                            <a href="/detailvalidasiadmin#proyek" class="edit-icon">✏️</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><img src="avatar2.png" alt="User"> Malaika Brown</td>
-                        <td>Extension</td>
-                        <td class="status accepted">Accepted</td>
-                        <td>11/02/23</td>
-                        <td class="action-buttons">
-                            <a href="/detailditerimaadmin" class="detail-btn">Detail</a>
-                            <a href="/detailditerimaadmin#proyek" class="edit-icon">✏️</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><img src="avatar3.png" alt="User"> Simon Minter</td>
-                        <td>Change</td>
-                        <td class="status rejected">Rejected</td>
-                        <td>10/01/23</td>
-                        <td class="action-buttons">
-                            <a href="/detailditolakadmin" class="detail-btn">Detail</a>
-                            <a href="/detailditolakadmin#proyek" class="edit-icon">✏️</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><img src="avatar5.png" alt="User"> Nishant Talwar</td>
-                        <td>Change</td>
-                        <td class="status done">Done</td>
-                        <td>08/12/22</td>
-                        <td class="action-buttons">
-                            <a href="/detaildoneadmin" class="detail-btn">Detail</a>
-                            <a href="/detaildoneadmin#proyek" class="edit-icon">✏️</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><img src="avatar6.png" alt="User"> Mark Jacobs</td>
-                        <td>New</td>
-                        <td class="status process">Process</td>
-                        <td>07/02/23</td>
-                        <td class="action-buttons">
-                            <a href="/detailprocessadmin" class="detail-btn">Detail</a>
-                            <a href="/detailprocessadmin#proyek" class="edit-icon">✏️</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><img src="avatar4.png" alt="User"> Ashley Brooke</td>
-                        <td>Retraction</td>
-                        <td class="status rejected">Rejected</td>
-                        <td>09/03/23</td>
-                        <td class="action-buttons">
-                            <a href="/detailditolakadmin" class="detail-btn">Detail</a>
-                            <a href="/detailditolakadmin#proyek" class="edit-icon">✏️</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                    @foreach ($dataPerizinan as $item)
+            <tr>
+                <td class="user-cell">
+                    <img src="{{ asset('storage/' . $item->foto_pemohon) }}" alt="User" width="30">
+                    <span>{{ $item->nama_pemohon }}</span>
+                </td>
+                <td>{{ ucfirst($item->jenis_perizinan) }}</td>
+                <td class="status {{ $item->status }}">{{ ucfirst(str_replace('_', ' ', $item->status)) }}</td>
+                <td>{{ \Carbon\Carbon::parse($item->tanggal_pengajuan)->format('d/m/y') }}</td>
+                <td class="action-buttons">
+                    <a href="{{ route('dataperizinanadmin.show', $item->id) }}" class="detail-btn">Detail</a>
+                    <a href="{{ route('dataperizinanadmin.edit', $item->id) }}" class="edit-icon">✏</a>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
 
             <!-- Tambahkan pagination DI BAWAH tabel -->
 <div class="pagination-centered">

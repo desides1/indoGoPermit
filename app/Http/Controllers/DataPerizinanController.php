@@ -2,64 +2,79 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DataPerizinan;
+use App\Models\Perizinan;
 use Illuminate\Http\Request;
 
 class DataPerizinanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Menampilkan semua data dengan relasi
     public function index()
     {
-        return view('user.formPerizinan.formStepper');
+        $dataPerizinan = Perizinan::with(['user', 'permissionType', 'request'])->get();
+        return view('admin.dataperizinanadmin', compact('dataPerizinan'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    // Menampilkan form tambah data
     public function create()
     {
-        //
+        return view('admin.tambahperizinan'); // pastikan view ini ada
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Menyimpan data baru
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'foto_pemohon' => 'required|string',
+            'nama_pemohon' => 'required|string|max:255',
+            'jenis_perizinan' => 'required|string',
+            'status' => 'required|in:waiting,process,accepted,rejected,done',
+            'tanggal_pengajuan' => 'required|date',
+            'file_dokumen' => 'nullable|string',
+        ]);
+
+        Perizinan::create($request->all());
+
+        return redirect()->route('dataperizinan.index')->with('success', 'Data berhasil ditambahkan.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(DataPerizinan $dataPerizinan)
+    // Menampilkan detail data
+    public function show($id)
     {
-        //
+        $data = Perizinan::with(['user', 'permissionType', 'request'])->findOrFail($id);
+        return view('admin.detailperizinan', compact('data')); // pastikan view ini ada
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(DataPerizinan $dataPerizinan)
+    // Menampilkan form edit
+    public function edit($id)
     {
-        //
+        $data = Perizinan::findOrFail($id);
+        return view('admin.editperizinan', compact('data')); // pastikan view ini ada
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, DataPerizinan $dataPerizinan)
+    // Mengupdate data
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'foto_pemohon' => 'required|string',
+            'nama_pemohon' => 'required|string|max:255',
+            'jenis_perizinan' => 'required|string',
+            'status' => 'required|in:waiting,process,accepted,rejected,done',
+            'tanggal_pengajuan' => 'required|date',
+            'file_dokumen' => 'nullable|string',
+        ]);
+
+        $data = Perizinan::findOrFail($id);
+        $data->update($request->all());
+
+        return redirect()->route('dataperizinan.index')->with('success', 'Data berhasil diperbarui.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(DataPerizinan $dataPerizinan)
+    // Menghapus data
+    public function destroy($id)
     {
-        //
+        $data = Perizinan::findOrFail($id);
+        $data->delete();
+
+        return redirect()->route('dataperizinan.index')->with('success', 'Data berhasil dihapus.');
     }
 }

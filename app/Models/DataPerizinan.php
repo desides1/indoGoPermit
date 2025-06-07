@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Perizinan extends Model
+class DataPerizinan extends Model
 {
 
     protected $table = 'data_perizinan';
