@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Province extends Model
 {
+    protected $table = 'province';
     protected $primaryKey = 'id_province';
 
     protected $fillable = [
         'name',
-        'city_id_city',
     ];
 
     public function city()

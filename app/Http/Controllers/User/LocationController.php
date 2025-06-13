@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
+use App\Http\Controllers\Controller;
 use App\Models\location;
 use Illuminate\Http\Request;
 
@@ -10,6 +11,8 @@ class LocationController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+
     public function index()
     {
         $locations = location::all();
@@ -21,10 +24,7 @@ class LocationController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        return view('user.formPerizinan.formStepper.createGis');
-    }
+    public function create() {}
 
     /**
      * Store a newly created resource in storage.

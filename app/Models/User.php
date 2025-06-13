@@ -11,13 +11,15 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    protected $primaryKey = 'id_user';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'username',
         'email',
         'password',
     ];
@@ -33,9 +35,9 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
     protected function casts(): array
     {

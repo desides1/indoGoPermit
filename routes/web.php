@@ -1,7 +1,5 @@
 <?php
 
-
-use App\Http\Controllers\locationController;
 use App\Http\Controllers\BerandaAdminController;
 use App\Http\Controllers\dataperizinanadmincontroller;
 use App\Http\Controllers\detailvalidasiadmincontroller;
@@ -24,6 +22,13 @@ Route::get('/dataperizinanadmin', [DataPerizinanAdminController::class, 'index']
     ->name('dataperizinanadmin.index');
 Route::post('/dataperizinanadmin/store', [dataperizinanadmincontroller::class, 'store'])
     ->name('dataperizinanadmin.store');
+Route::get('/dataperizinanadmin/{id}', [DataPerizinanAdminController::class, 'show'])
+    ->name('dataperizinanadmin.show');
+Route::get('/dataperizinanadmin/{id}/edit', [DataPerizinanAdminController::class, 'edit'])
+    ->name('dataperizinanadmin.edit');
+Route::put('/dataperizinanadmin/{id}', [DataPerizinanAdminController::class, 'update'])
+    ->name('dataperizinanadmin.update');
+
 
 Route::get('/detailvalidasiadmin', [detailvalidasiadmincontroller::class, 'index'])
     ->name('/detailvalidasiadmin.index');
@@ -59,24 +64,88 @@ Route::get('/laporancetakadmin/print-pdf', [LaporanExportController::class, 'pri
     ->name('laporancetakadmin.printpdf');
 
 
+use App\Http\Middleware\RoleMiddleware;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\User\RequestController;
+use App\Http\Controllers\User\PermissionTypeController;
+use App\Http\Controllers\User\LocationController;
+use App\Http\Controllers\User\DataPerizinanController;
+use App\Http\Controllers\User\FormStepper;
+use App\Http\Controllers\User\HomeController;
+use App\Http\Controllers\User\ProfileController; // Ensure this matches the actual namespace of ProfileController
+// Removed unused imports
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-route::get('/home', function () {
-    return view('user.home');
+Route::middleware(['guest'])->group(function () {
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.auth');
+    Route::post('/register', [AuthController::class, 'register'])->name('register.auth');
+    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 });
-route::get('/perizinan', function () {
-    return view('user.formPerizinan.berandaDataPerizinan');
+
+
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/perizinan', [DataPerizinanController::class, 'index'])->name('perizinan');
+
+//for permission type select
+Route::get('/permission', [PermissionTypeController::class, 'index'])->name('permission');
+Route::post('/permission', [PermissionTypeController::class, 'validate'])->name('permission.validate');
+
+// For stepper form
+Route::get('/addData/{step?}', [FormStepper::class, 'index'])->name('addData');
+Route::post('/addData/store', [FormStepper::class, 'store'])->name('addData.store');
+
+// For fetching data
+Route::post('/fetch-city', [FormStepper::class, 'fetchCity']);
+Route::post('/fetch-subdistrict', [FormStepper::class, 'fetchSubdistrict']);
+// Dropdown AJAX
+// Route::post('/fetch-city', [FormStepper::class, 'fetchCity'])->name('fetch.city');
+// Route::post('/fetch-subdistric', [FormStepper::class, 'fetchSubdistric'])->name('fetch.subdistric');
+// Route::post('/addData/{step?}', [FormStepper::class, 'store'])->name('addData');
+
+// Route::get('/add-data', [FormStepper::class, 'getStepData'])->name('addData');
+
+// Route::get('/perizinan-data', [FormStepper::class, 'index'])->name('addData');
+// Route::get('/add-data', [FormStepper::class, 'getStepData'])->name('addData');
+Route::get('/request-permit-store', [RequestController::class, 'index'])->name('request');
+Route::get('/add-location', [LocationController::class, 'index'])->name('data-location.index');
+Route::post('/add-location-store', [LocationController::class, 'store'])->name('data-location.store');
+
+Route::middleware(['auth', RoleMiddleware::class . ':user'])->group(function () {
+    Route::get('/permissions', [DataPerizinanController::class, 'index'])->name('data-permissions.index');
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 });
+
+
+Route::middleware(['auth:web'])->group(function () {
+    Route::get('/home1', [HomeController::class, 'index'])->name('home.1');
+});
+
+
+
+
+
+
+
+
+
+
+// route::get('/perizinan', function () {
+//     return view('user.formPerizinan.berandaDataPerizinan');
+// });
 route::get('/addData', function () {
     return view('user.formPerizinan.addDataPerizinan');
 });
-// route::get('/addDataStep', function () {
-//     return view('layouts.stepperForm');
+// Route::get('/add-data', function () {
+//     return view('user.formPermissions.addDataPermissions');
 // });
+// Route::get('/activity', [ActivityController::class, 'index'])->name('activity.index');
+// Route::get('/DetailPerorangan', [DetailPeroranganController::class, 'store'])->name('DetailPerorangan.store');
+// Route::get('/perizinan/index', [App\Http\Controllers\locationController::class, 'index'])->name('perizinan.index');
 
-Route::get('/perizinan/index', [App\Http\Controllers\locationController::class, 'index'])->name('perizinan.index');
-
-Route::resource('locations', locationController::class);
+// Route::resource('locations', locationController::class);

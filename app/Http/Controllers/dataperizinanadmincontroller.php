@@ -5,31 +5,37 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Perizinan;
 
-class dataperizinanadmincontroller extends Controller
+class DataPerizinanAdminController extends Controller
 {
-    // Menampilkan semua data
     public function index()
     {
-        $dataPerizinan = Perizinan::all();
-        return view('admin.dataperizinanadmin', compact('dataPerizinan'));
+        $dataPerizinan = Perizinan::with([
+            'user', 'permissionType', 'location', 'request',
+            'individual', 'bussinessEntity', 'documentRequirements', 'project'
+        ])->get();
+
+        $firstWaiting = Perizinan::first();
+        $idWaiting = $firstWaiting ? $firstWaiting->id_perizinan : null;
+
+        return view('_admin.dataperizinanadmin', compact('dataPerizinan', 'idWaiting'));
     }
 
-    // Menampilkan form tambah data
     public function create()
     {
-        return view('admin.tambahperizinan'); // pastikan view ini ada
+        return view('_admin.tambahperizinan');
     }
 
-    // Menyimpan data baru
     public function store(Request $request)
     {
         $request->validate([
-            'foto_pemohon' => 'required|string',
-            'nama_pemohon' => 'required|string|max:255',
-            'jenis_perizinan' => 'required|string',
-            'status' => 'required|in:waiting,process,accepted,rejected,done',
-            'tanggal_pengajuan' => 'required|date',
-            'file_dokumen' => 'nullable|string',
+            'user_id' => 'required|exists:users,id_user',
+            'permission_type_id' => 'required|exists:permission_type,id_permission_type',
+            'location_id_location' => 'required|exists:location,id_location',
+            'request_id_request' => 'required|exists:request,id_request',
+            'individual_id_individual' => 'nullable|exists:individual,id_individual',
+            'bussiness_entity_id_bussiness_entity' => 'nullable|exists:bussiness_entity,id_bussiness_entity',
+            'document_requirements_id_document_requirements' => 'required|exists:document_requirements,id_document_requirements',
+            'project_id_project' => 'required|exists:project,id_project',
         ]);
 
         Perizinan::create($request->all());
@@ -37,30 +43,33 @@ class dataperizinanadmincontroller extends Controller
         return redirect()->route('dataperizinanadmin.index')->with('success', 'Data berhasil ditambahkan.');
     }
 
-    // Menampilkan detail data
     public function show($id)
     {
-        $data = Perizinan::findOrFail($id);
-        return view('admin.detailperizinan', compact('data')); // pastikan view ini ada
+        $data = Perizinan::with([
+            'user', 'permissionType', 'location', 'request',
+            'individual', 'bussinessEntity', 'documentRequirements', 'project'
+        ])->findOrFail($id);
+
+        return view('_admin.detailperizinan', compact('data'));
     }
 
-    // Menampilkan form edit
     public function edit($id)
     {
         $data = Perizinan::findOrFail($id);
-        return view('admin.editperizinan', compact('data')); // pastikan view ini ada
+        return view('_admin.editperizinan', compact('data'));
     }
 
-    // Mengupdate data
     public function update(Request $request, $id)
     {
         $request->validate([
-            'foto_pemohon' => 'required|string',
-            'nama_pemohon' => 'required|string|max:255',
-            'jenis_perizinan' => 'required|string',
-            'status' => 'required|in:waiting,process,accepted,rejected,done',
-            'tanggal_pengajuan' => 'required|date',
-            'file_dokumen' => 'nullable|string',
+            'user_id' => 'required|exists:users,id_user',
+            'permission_type_id' => 'required|exists:permission_type,id_permission_type',
+            'location_id_location' => 'required|exists:location,id_location',
+            'request_id_request' => 'required|exists:request,id_request',
+            'individual_id_individual' => 'nullable|exists:individual,id_individual',
+            'bussiness_entity_id_bussiness_entity' => 'nullable|exists:bussiness_entity,id_bussiness_entity',
+            'document_requirements_id_document_requirements' => 'required|exists:document_requirements,id_document_requirements',
+            'project_id_project' => 'required|exists:project,id_project',
         ]);
 
         $data = Perizinan::findOrFail($id);
@@ -69,12 +78,27 @@ class dataperizinanadmincontroller extends Controller
         return redirect()->route('dataperizinanadmin.index')->with('success', 'Data berhasil diperbarui.');
     }
 
-    // Menghapus data
     public function destroy($id)
     {
         $data = Perizinan::findOrFail($id);
         $data->delete();
 
         return redirect()->route('dataperizinanadmin.index')->with('success', 'Data berhasil dihapus.');
+    }
+
+    public function showDiterima($id)
+    {
+        $data = Perizinan::with([
+            'user',
+            'request',
+            'permissionType',
+            'location',
+            'individual',
+            'bussinessEntity',
+            'documentRequirements.documents',
+            'project'
+        ])->findOrFail($id);
+
+        return view('_admin.detailditerimaadmin', compact('data'));
     }
 }

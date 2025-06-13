@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('subdistrict', function (Blueprint $table) {
-            $table->id('id_subdistrict');
-            $table->string('name');
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('role')->default('user'); // Default role is 'user'
         });
     }
 
@@ -23,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('subdistrict');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('role');
+        });
     }
 };

@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
-use App\Models\Perizinan;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class DataPerizinanController extends Controller
+class HomeController extends Controller
 {
     // Menampilkan semua data dengan relasi
     public function index()
     {
-        $dataPerizinan = Perizinan::with(['user', 'permissionType', 'request'])->get();
-        return view('admin.dataperizinanadmin', compact('dataPerizinan'));
+        // dd(session()->all());
+        return view('user.home');
     }
 
     // Menampilkan form tambah data
@@ -37,22 +37,28 @@ class DataPerizinanController extends Controller
         return redirect()->route('dataperizinan.index')->with('success', 'Data berhasil ditambahkan.');
     }
 
-    // Menampilkan detail data
-    public function show($id)
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
     {
         $data = Perizinan::with(['user', 'permissionType', 'request'])->findOrFail($id);
         return view('admin.detailperizinan', compact('data')); // pastikan view ini ada
     }
 
-    // Menampilkan form edit
-    public function edit($id)
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
     {
         $data = Perizinan::findOrFail($id);
         return view('admin.editperizinan', compact('data')); // pastikan view ini ada
     }
 
-    // Mengupdate data
-    public function update(Request $request, $id)
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
     {
         $request->validate([
             'foto_pemohon' => 'required|string',
@@ -69,8 +75,10 @@ class DataPerizinanController extends Controller
         return redirect()->route('dataperizinan.index')->with('success', 'Data berhasil diperbarui.');
     }
 
-    // Menghapus data
-    public function destroy($id)
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
     {
         $data = Perizinan::findOrFail($id);
         $data->delete();

@@ -49,23 +49,25 @@
 
             <select id="filter-day" onchange="applyFilters()">
                 <option value="all">All Days</option>
-                @for ($d = 1; $d <= 31; $d++)
-                    <option value="{{ str_pad($d, 2, '0', STR_PAD_LEFT) }}">{{ str_pad($d, 2, '0', STR_PAD_LEFT) }}</option>
-                @endfor
-            </select>
-
-            <select id="filter-month" onchange="applyFilters()">
-                <option value="all">All Months</option>
-                @for ($m = 1; $m <= 12; $m++)
-                    <option value="{{ str_pad($m, 2, '0', STR_PAD_LEFT) }}">{{ str_pad($m, 2, '0', STR_PAD_LEFT) }}</option>
-                @endfor
-            </select>
-
-            <select id="filter-year" onchange="applyFilters()">
-                <option value="all">All Years</option>
-                <option value="2022">2022</option>
-                <option value="2023">2023</option>
-            </select>
+                 @for ($d = 1; $d <= 31; $d++)
+                <option value="{{ str_pad($d, 2, '0', STR_PAD_LEFT) }}">{{ str_pad($d, 2, '0', STR_PAD_LEFT) }}</option>
+            @endfor
+        </select>
+        <select id="filter-month" onchange="applyFilters()">
+            <option value="all">All Months</option>
+            @for ($m = 1; $m <= 12; $m++)
+                <option value="{{ str_pad($m, 2, '0', STR_PAD_LEFT) }}">{{ str_pad($m, 2, '0', STR_PAD_LEFT) }}</option>
+            @endfor
+        </select>
+        <select id="filter-year" onchange="applyFilters()">
+            <option value="all">All Years</option>
+            @php
+                $years = $dataPerizinan->pluck('created_at')->map(fn($date) => \Carbon\Carbon::parse($date)->format('Y'))->unique();
+            @endphp
+            @foreach ($years as $year)
+                <option value="{{ $year }}">{{ $year }}</option>
+            @endforeach
+        </select>
 
             <select id="filter-status" onchange="applyFilters()">
                 <option value="all">All Status</option>
@@ -96,112 +98,99 @@
                         <th>STATUS</th>
                         <th>FILING DATE</th>
                         <th>ACTION</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($dataPerizinan as $item)
+                                </tr>
+        </thead>
+        <tbody>
+            @foreach ($dataPerizinan as $item)
             <tr>
                 <td class="user-cell">
-                    <img src="{{ asset('storage/' . $item->foto_pemohon) }}" alt="User" width="30">
-                    <span>{{ $item->nama_pemohon }}</span>
+                    <img src="{{ asset('storage/' . $item->user->photo ?? '') }}" alt="User" width="30">
+                    <span>{{ $item->user->name ?? '-' }}</span>
                 </td>
-                <td>{{ ucfirst($item->jenis_perizinan) }}</td>
-                <td class="status {{ $item->status }}">{{ ucfirst(str_replace('_', ' ', $item->status)) }}</td>
-                <td>{{ \Carbon\Carbon::parse($item->tanggal_pengajuan)->format('d/m/y') }}</td>
+                <td>{{ $item->permissionType->name ?? '-' }}</td>
+                <td class="status {{ $item->status }}">
+                    {{ ucfirst(str_replace('_', ' ', $item->status)) }}
+                </td>
+                <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/y') }}</td>
                 <td class="action-buttons">
-                    <a href="{{ route('dataperizinanadmin.show', $item->id) }}" class="detail-btn">Detail</a>
-                    <a href="{{ route('dataperizinanadmin.edit', $item->id) }}" class="edit-icon">✏</a>
+                    {{-- <a href="{{ route('dataperizinanadmin.show', $item->id_perizinan) }}" class="detail-btn">Detail</a>
+                    <a href="{{ route('dataperizinanadmin.edit', $item->id_perizinan) }}" class="edit-icon">✏</a> --}}
                 </td>
             </tr>
             @endforeach
         </tbody>
     </table>
 
-            <!-- Tambahkan pagination DI BAWAH tabel -->
-<div class="pagination-centered">
-    <div class="pagination">
-        <span class="pagination-text">Rows per page:</span>
-        <select>
-            <option>8</option>
-            <option>16</option>
-            <option>32</option>
-        </select>
-        <span class="pagination-text">1–8 of 1240</span>
-        <span class="prev">⬅️</span>
-        <span class="next">➡️</span>
+    <div class="pagination-centered">
+        <div class="pagination">
+            <span class="pagination-text">Rows per page:</span>
+            <select>
+                <option>8</option>
+                <option>16</option>
+                <option>32</option>
+            </select>
+            <span class="pagination-text">1–{{ count($dataPerizinan) }} of {{ count($dataPerizinan) }}</span>
+            <span class="prev">⬅</span>
+            <span class="next">➡</span>
+        </div>
     </div>
 </div>
 
-<!-- Filter Script -->
-<script>
-    function filterTable(status) {
-        const rows = document.querySelectorAll("tbody tr");
-        const buttons = document.querySelectorAll(".tab-btn");
+    <script>
+        function filterTable(status) {
+            const rows = document.querySelectorAll("tbody tr");
+            const buttons = document.querySelectorAll(".tab-btn");
 
-        // Hapus class active dari semua tombol
-        buttons.forEach(btn => btn.classList.remove("active"));
+            buttons.forEach(btn => btn.classList.remove("active"));
+            document.querySelector(.tab-btn[data-status="${status}"]).classList.add("active");
 
-        // Tambahkan class active ke tombol yang diklik
-        document.querySelector(`.tab-btn[data-status="${status}"]`).classList.add("active");
+            rows.forEach(row => {
+                const statusCell = row.querySelector(".status");
+                if (status === "all" || statusCell.classList.contains(status)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
 
-        rows.forEach(row => {
-            const statusCell = row.querySelector(".status");
-            if (status === "all") {
-                row.style.display = "";
-            } else if (statusCell && statusCell.classList.contains(status)) {
-                row.style.display = "";
-            } else {
-                row.style.display = "none";
-            }
-        });
-    }
-    function applyFilters() {
-        const selectedDay = document.getElementById("filter-day").value;
-        const selectedMonth = document.getElementById("filter-month").value;
-        const selectedYear = document.getElementById("filter-year").value;
-        const selectedStatus = document.getElementById("filter-status").value;
+        function applyFilters() {
+            const selectedDay = document.getElementById("filter-day").value;
+            const selectedMonth = document.getElementById("filter-month").value;
+            const selectedYear = document.getElementById("filter-year").value;
+            const selectedStatus = document.getElementById("filter-status").value;
 
-        const rows = document.querySelectorAll("tbody tr");
+            const rows = document.querySelectorAll("tbody tr");
 
-        rows.forEach(row => {
-            const dateParts = row.cells[3].textContent.trim().split("/");
-            const day = dateParts[0];
-            const month = dateParts[1];
-            const year = "20" + dateParts[2]; // Ubah '23' menjadi '2023'
+            rows.forEach(row => {
+                const dateParts = row.cells[3].textContent.trim().split("/");
+                const day = dateParts[0];
+                const month = dateParts[1];
+                const year = "20" + dateParts[2];
+                const statusCell = row.querySelector(".status");
 
-            const statusCell = row.querySelector(".status");
+                const matchDay = selectedDay === "all" || selectedDay === day;
+                const matchMonth = selectedMonth === "all" || selectedMonth === month;
+                const matchYear = selectedYear === "all" || selectedYear === year;
+                const matchStatus = selectedStatus === "all" || statusCell.classList.contains(selectedStatus);
 
-            const matchDay = selectedDay === "all" || selectedDay === day;
-            const matchMonth = selectedMonth === "all" || selectedMonth === month;
-            const matchYear = selectedYear === "all" || selectedYear === year;
-            const matchStatus = selectedStatus === "all" || statusCell.classList.contains(selectedStatus);
+                row.style.display = (matchDay && matchMonth && matchYear && matchStatus) ? "" : "none";
+            });
 
-            if (matchDay && matchMonth && matchYear && matchStatus) {
-                row.style.display = "";
-            } else {
-                row.style.display = "none";
-            }
-        });
+            document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+            document.querySelector(.tab-btn[data-status="all"]).classList.add("active");
+        }
 
-        // Reset tab active jika dropdown digunakan
-        document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
-        document.querySelector(`.tab-btn[data-status="all"]`).classList.add("active");
-    }
+        function resetFilters() {
+            document.getElementById("filter-day").value = "all";
+            document.getElementById("filter-month").value = "all";
+            document.getElementById("filter-year").value = "all";
+            document.getElementById("filter-status").value = "all";
 
-    function resetFilters() {
-        document.getElementById("filter-day").value = "all";
-        document.getElementById("filter-month").value = "all";
-        document.getElementById("filter-year").value = "all";
-        document.getElementById("filter-status").value = "all";
-
-        document.querySelectorAll("tbody tr").forEach(row => {
-            row.style.display = "";
-        });
-
-        document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
-        document.querySelector(`.tab-btn[data-status="all"]`).classList.add("active");
-    }
-</script>
-</div>
-</body>
-</html>
+            document.querySelectorAll("tbody tr").forEach(row => row.style.display = "");
+            document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+            document.querySelector(.tab-btn[data-status="all"]).classList.add("active");
+        }
+    </script>
+    </body>
+    </html>

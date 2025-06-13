@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     let currentStep = 1;
-    const totalSteps = 6;
+    const totalSteps = 5;
 
     function updateSteps() {
         document.querySelectorAll(".step-content").forEach((step) => {

@@ -1,8 +1,9 @@
 <!-- resources/views/components/datepicker.blade.php -->
-@props(['placeholder' => 'Pilih tanggal'])
+
+@props(['placeholder' => 'Pilih tanggal', 'id' => 'datepicker-' . uniqid()])
 
 <div class="relative w-full max-w-sm">
-    <input type="text" name="datepicker" id="datepicker"
+    <input type="text" name="{{ $attributes->get('name') }}" id="{{ $id }}"
         {{ $attributes->merge(['class' => 'flatpickr-input w-full pl-4 pr-10 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent']) }}
         placeholder="{{ $placeholder }}" readonly />
     <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
