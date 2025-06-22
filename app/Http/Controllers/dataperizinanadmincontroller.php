@@ -17,12 +17,12 @@ class DataPerizinanAdminController extends Controller
         $firstWaiting = Perizinan::first();
         $idWaiting = $firstWaiting ? $firstWaiting->id_perizinan : null;
 
-        return view('_admin.dataperizinanadmin', compact('dataPerizinan', 'idWaiting'));
+        return view('admin.dataperizinanadmin', compact('dataPerizinan', 'idWaiting'));
     }
 
     public function create()
     {
-        return view('_admin.tambahperizinan');
+        return view('admin.tambahperizinan');
     }
 
     public function store(Request $request)
@@ -50,13 +50,13 @@ class DataPerizinanAdminController extends Controller
             'individual', 'bussinessEntity', 'documentRequirements', 'project'
         ])->findOrFail($id);
 
-        return view('_admin.detailperizinan', compact('data'));
+       return view('admin.detailprocessadmin', ['perizinan' => $data]);
     }
 
     public function edit($id)
     {
         $data = Perizinan::findOrFail($id);
-        return view('_admin.editperizinan', compact('data'));
+        return view('admin.editperizinan', compact('data'));
     }
 
     public function update(Request $request, $id)
@@ -99,6 +99,6 @@ class DataPerizinanAdminController extends Controller
             'project'
         ])->findOrFail($id);
 
-        return view('_admin.detailditerimaadmin', compact('data'));
+        return view('admin.detailditerimaadmin', compact('data'));
     }
 }

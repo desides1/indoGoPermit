@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Individual extends Model
 {
+    protected $table = 'individual';
     protected $primaryKey = 'id_individual';
+    public $timestamps = true;
 
     protected $fillable = [
         'indentity_type',

@@ -3,72 +3,105 @@
 namespace App\Http\Controllers;
 
 use App\Models\DetailDone;
+use App\Models\User;
+use App\Models\Perizinan;
+use App\Models\PermissionType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
-class detaildoneadmincontroller extends Controller
+class DetailDoneAdminController extends Controller
 {
-    // Tampilkan semua data ke halaman admin
     public function index()
     {
-        $data = DetailDone::all();
+        $data = DetailDone::with(['user', 'perizinan', 'permissionType'])->get();
         return view('admin.detaildoneadmin', compact('data'));
     }
 
-    // Simpan data baru dari form admin
+    public function show($id)
+    {
+        // Ambil detail dengan relasi user, permissionType, dan perizinan (jika dibutuhkan)
+        $detail = DetailDone::with(['user', 'permissionType', 'perizinan'])->findOrFail($id);
+
+        // Data untuk dropdown jenis perizinan
+        $permissionTypes = PermissionType::all();
+
+        // Data untuk dropdown user (jika dibutuhkan di form edit/input)
+        $users = \App\Models\User::all();
+
+        // Data untuk dropdown perizinan (jika ingin bisa diubah)
+        $perizinans = \App\Models\Perizinan::all();
+
+        return view('admin.detaildoneadmin', compact('detail', 'permissionTypes', 'users', 'perizinans'));
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nama_pemohon'      => 'required|string',
-            'status'            => 'required|string',
-            'jenis_perizinan'   => 'required|string',
-            'tanggal_pengajuan' => 'required|date',
-            'tanggal_selesai'   => 'required|date',
-            'catatan'           => 'nullable|string',
-            'surat_keputusan'   => 'nullable|string',
-            'sertifikat_izin'   => 'nullable|string',
-            'berita_acara'      => 'nullable|string',
-            'dokumen_pendukung' => 'nullable|string',
+            'user_id' => 'required|exists:users,id_user',
+            'perizinan_id' => 'required|unique:detail_done,perizinan_id|exists:perizinan,id_perizinan',
+            'permission_type_id' => 'required|exists:permission_type,id_permission_type',
+            'tanggal_selesai' => 'required|date',
+            'catatan' => 'nullable|string',
+
+            'surat_keputusan' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+            'sertifikat_izin' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+            'berita_acara' => 'nullable|file|mimes:pdf,jpg,jpeg|max:2048',
+            'dokumen_pendukung' => 'nullable|file|mimes:pdf,zip|max:2048',
         ]);
+
+        // File uploads
+        foreach (['surat_keputusan', 'sertifikat_izin', 'berita_acara', 'dokumen_pendukung'] as $field) {
+            if ($request->hasFile($field)) {
+                $validated[$field] = $request->file($field)->store('public/documents');
+                $validated[$field] = str_replace('public/', '', $validated[$field]);
+            }
+        }
+
+        // Ambil tanggal pengajuan dari tabel perizinan
+        $perizinan = Perizinan::findOrFail($validated['perizinan_id']);
+        $validated['tanggal_pengajuan'] = $perizinan->created_at->format('Y-m-d');
 
         DetailDone::create($validated);
-        return redirect()->back()->with('success', 'Data berhasil ditambahkan.');
+
+        return redirect()->route('detaildone.index')
+            ->with('success', 'Data perizinan berhasil disimpan.');
     }
 
-    // Tampilkan detail berdasarkan ID
-    public function show($id)
-    {
-        $data = DetailDone::findOrFail($id);
-        return view('admin.detaildone_detail', compact('data'));
-    }
-
-    // Perbarui data dari form admin
     public function update(Request $request, $id)
     {
-        $done = DetailDone::findOrFail($id);
+        $detail = DetailDone::findOrFail($id);
 
         $validated = $request->validate([
-            'nama_pemohon'      => 'sometimes|required|string',
-            'status'            => 'sometimes|required|string',
-            'jenis_perizinan'   => 'sometimes|required|string',
-            'tanggal_pengajuan' => 'sometimes|required|date',
-            'tanggal_selesai'   => 'sometimes|required|date',
-            'catatan'           => 'nullable|string',
-            'surat_keputusan'   => 'nullable|string',
-            'sertifikat_izin'   => 'nullable|string',
-            'berita_acara'      => 'nullable|string',
-            'dokumen_pendukung' => 'nullable|string',
+            'user_id' => 'required|exists:users,id_user',
+            'perizinan_id' => 'required|exists:perizinan,id_perizinan',
+            'permission_type_id' => 'required|exists:permission_type,id_permission_type',
+            'tanggal_selesai' => 'required|date',
+            'catatan' => 'nullable|string',
+
+            'surat_keputusan' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+            'sertifikat_izin' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+            'berita_acara' => 'nullable|file|mimes:pdf,jpg,jpeg|max:2048',
+            'dokumen_pendukung' => 'nullable|file|mimes:pdf,zip|max:2048',
         ]);
 
-        $done->update($validated);
-        return redirect()->back()->with('success', 'Data berhasil diperbarui.');
-    }
+        foreach (['surat_keputusan', 'sertifikat_izin', 'berita_acara', 'dokumen_pendukung'] as $field) {
+            if ($request->hasFile($field)) {
+                if ($detail->$field) {
+                    Storage::delete('public/' . $detail->$field);
+                }
+                $validated[$field] = $request->file($field)->store('public/documents');
+                $validated[$field] = str_replace('public/', '', $validated[$field]);
+            } else {
+                $validated[$field] = $detail->$field;
+            }
+        }
 
-    // Hapus data
-    public function destroy($id)
-    {
-        $done = DetailDone::findOrFail($id);
-        $done->delete();
+        $perizinan = Perizinan::findOrFail($validated['perizinan_id']);
+        $validated['tanggal_pengajuan'] = $perizinan->created_at->format('Y-m-d');
 
-        return redirect()->back()->with('success', 'Data berhasil dihapus.');
+        $detail->update($validated);
+
+        return redirect()->route('detaildone.index')
+            ->with('success', 'Data perizinan berhasil diperbarui.');
     }
 }

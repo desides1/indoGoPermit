@@ -34,7 +34,7 @@
 
         <div class="container">
             <div class="section-header">
-                <h2>Laporan Perizinan</h2>
+                <h2>Laporan Perizinan Selesai</h2>
                 <a href="#" class="view-all">View All</a>
             </div>
 
@@ -43,16 +43,18 @@
                     🔍
                     <input type="text" id="searchInput" placeholder="Ketikkan...">
                 </div>
-                <div class="status-filter">
-                    <label for="filterStatus">Status:</label>
-                    <select id="filterStatus">
-                        <option value="">Semua</option>
-                        <option value="Disetujui">Disetujui</option>
-                        <option value="Ditolak">Ditolak</option>
-                        <option value="Selesai">Selesai</option>
-                    </select>
+                <div class="date-filter">
+                    <form action="{{ route('laporancetakadmin.index') }}" method="GET">
+                        <label for="tanggal_mulai">Dari:</label>
+                        <input type="date" name="tanggal_mulai" id="tanggal_mulai" value="{{ request('tanggal_mulai') }}">
+
+                        <label for="tanggal_selesai">Sampai:</label>
+                        <input type="date" name="tanggal_selesai" id="tanggal_selesai" value="{{ request('tanggal_selesai') }}">
+
+                        <button type="submit" class="filter-btn">Filter</button>
+                        <button type="button" class="filter-btn" id="resetBtn">🔄 Reset</button>
+                    </form>
                 </div>
-                <button class="filter-btn" id="resetBtn">🔄 Reset</button>
             </div>
 
             <div class="table-container">
@@ -62,27 +64,19 @@
                             <th>NO</th>
                             <th>NAMA PEMOHON</th>
                             <th>JENIS IZIN</th>
-                            <th>STATUS</th>
                             <th>TANGGAL PENGAJUAN</th>
                             <th>TANGGAL SELESAI</th>
                             <th>AKSI</th>
                         </tr>
                     </thead>
                     <tbody id="laporanTable">
-                        @foreach ($data as $index => $izin)
+                        @foreach ($data as $index => $item)
                         <tr>
                             <td>{{ $index + 1 }}</td>
-                            <td>{{ $izin->nama_pemohon }}</td>
-                            <td>{{ $izin->jenis_izin }}</td>
-                            <td>{{ $izin->status }}</td>
-                            <td>{{ \Carbon\Carbon::parse($izin->tanggal_pengajuan)->format('d/m/Y') }}</td>
-                            <td>
-                                @if ($izin->status === 'selesai')
-                                    {{ $izin->tanggal_selesai ? \Carbon\Carbon::parse($izin->tanggal_selesai)->format('d/m/Y') : now()->format('d/m/Y') }}
-                                @else
-                                    -
-                                @endif
-                            </td>
+                            <td>{{ $item->user->username ?? '-' }}</td>
+                            <td>{{ $item->permissionType->name ?? '-' }}</td>
+                            <td>{{ $item->tanggal_pengajuan ? \Carbon\Carbon::parse($item->tanggal_pengajuan)->format('d/m/Y') : '-' }}</td>
+                            <td>{{ $item->tanggal_selesai ? \Carbon\Carbon::parse($item->tanggal_selesai)->format('d/m/Y') : '-' }}</td>
                             <td class="aksi-col">
                                 <button class="btn-action printRow">🖨️ Cetak</button>
                                 <button class="btn-action pdfRow">📥 PDF</button>
@@ -118,46 +112,41 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const searchInput = document.getElementById('searchInput');
-            const filterStatus = document.getElementById('filterStatus');
             const resetBtn = document.getElementById('resetBtn');
             const tableBody = document.getElementById('laporanTable');
 
             function filterRows() {
                 const searchText = searchInput.value.toLowerCase().trim();
-                const statusFilter = filterStatus.value.toLowerCase().trim();
                 const rows = tableBody.querySelectorAll('tr');
 
                 rows.forEach(row => {
                     const nama = row.children[1].textContent.toLowerCase();
                     const jenis = row.children[2].textContent.toLowerCase();
-                    const status = row.children[3].textContent.toLowerCase();
 
                     const matchSearch = !searchText || nama.includes(searchText) || jenis.includes(searchText);
-                    const matchStatus = !statusFilter || status.includes(statusFilter);
 
-                    row.style.display = (matchSearch && matchStatus) ? '' : 'none';
+                    row.style.display = matchSearch ? '' : 'none';
                 });
             }
 
             searchInput.addEventListener('keyup', filterRows);
-            filterStatus.addEventListener('change', filterRows);
 
             resetBtn.addEventListener('click', () => {
                 searchInput.value = '';
-                filterStatus.value = '';
                 filterRows();
+                window.location.href = "{{ route('laporancetakadmin.index') }}";
             });
 
             // Cetak semua
             document.getElementById('printAll').addEventListener('click', () => {
                 const printArea = document.querySelector('.table-container').cloneNode(true);
                 printArea.querySelectorAll('tr').forEach(row => {
-                    if (row.cells.length > 6) row.deleteCell(6); // remove aksi
+                    if (row.cells.length > 5) row.deleteCell(5); // remove aksi
                 });
 
                 const win = window.open('', '_blank');
                 win.document.write('<html><head><title>Cetak</title></head><body>');
-                win.document.write('<h2>Laporan Perizinan</h2>');
+                win.document.write('<h2>Laporan Perizinan Selesai</h2>');
                 win.document.write(printArea.innerHTML);
                 win.document.write('</body></html>');
                 win.print();
@@ -168,7 +157,7 @@
             document.getElementById('downloadPDFAll').addEventListener('click', () => {
                 const element = document.querySelector('.table-container').cloneNode(true);
                 element.querySelectorAll('tr').forEach(row => {
-                    if (row.cells.length > 6) row.deleteCell(6);
+                    if (row.cells.length > 5) row.deleteCell(5);
                 });
                 html2pdf().from(element).save("laporan-semua.pdf");
             });
@@ -177,10 +166,10 @@
             document.querySelectorAll('.printRow').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const row = btn.closest('tr').cloneNode(true);
-                    row.deleteCell(6);
+                    row.deleteCell(5);
                     const win = window.open('', '_blank');
                     win.document.write('<html><head><title>Cetak Baris</title></head><body>');
-                    win.document.write('<table border="1"><thead><tr><th>NO</th><th>NAMA PEMOHON</th><th>JENIS IZIN</th><th>STATUS</th><th>TGL PENGAJUAN</th><th>TGL SELESAI</th></tr></thead>');
+                    win.document.write('<table border="1"><thead><tr><th>NO</th><th>NAMA PEMOHON</th><th>JENIS IZIN</th><th>TGL PENGAJUAN</th><th>TGL SELESAI</th></tr></thead>');
                     win.document.write('<tbody>' + row.outerHTML + '</tbody></table>');
                     win.document.write('</body></html>');
                     win.print();
@@ -192,7 +181,7 @@
             document.querySelectorAll('.pdfRow').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const row = btn.closest('tr').cloneNode(true);
-                    row.deleteCell(6);
+                    row.deleteCell(5);
                     const table = document.createElement('table');
                     table.border = 1;
                     table.appendChild(row);

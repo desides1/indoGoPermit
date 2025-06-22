@@ -33,8 +33,8 @@ Route::put('/dataperizinanadmin/{id}', [DataPerizinanAdminController::class, 'up
 Route::get('/detailvalidasiadmin', [detailvalidasiadmincontroller::class, 'index'])
     ->name('/detailvalidasiadmin.index');
 
-Route::get('/detailprocessadmin', [detailprocessadmincontroller::class, 'index'])
-    ->name('/detailprocessadmin.index');
+Route::get('/detailprocessadmin/{id}', [detailprocessadmincontroller::class, 'show'])
+    ->name('detailprocessadmin.show');
 
 Route::get('/detailditerimaadmin', [detailditerimaadmincontroller::class, 'index'])
     ->name('/detailditerimaadmin.index');
@@ -42,20 +42,24 @@ Route::get('/detailditerimaadmin', [detailditerimaadmincontroller::class, 'index
 Route::get('/detailditolakadmin', [detailditolakadmincontroller::class, 'index'])
     ->name('/detailditolakadmin.index');
 
-Route::get('/detaildoneadmin', [DetailDoneAdminController::class, 'index'])
-    ->name('detaildoneadmin.index');
-Route::get('/admin/detaildoneadmin', [DetailDoneAdminController::class, 'index'])
-    ->name('detaildoneadmin.index');
-Route::post('/detaildoneadmin/store', [detaildoneadmincontroller::class, 'store'])
-    ->name('detaildoneadmin.store');
-Route::get('/detaildoneadmin/{id}', [detaildoneadmincontroller::class, 'show'])
-    ->name('detaildoneadmin.show');
-Route::put('/detaildoneadmin/{id}', [detaildoneadmincontroller::class, 'update'])
-    ->name('detaildoneadmin.update');
-Route::delete('/detaildoneadmin/{id}', [detaildoneadmincontroller::class, 'destroy'])
-    ->name('detaildoneadmin.destroy');
+// Tampilkan semua data detail_done
+Route::get('/detaildoneadmin', [detaildoneadmincontroller::class, 'index'])->name('detaildone.index');
+
+// Tampilkan form detail untuk 1 data (bisa untuk edit/tinjau)
+Route::get('/detaildoneadmin/{id}', [detaildoneadmincontroller::class, 'show'])->name('detaildone.show');
+
+// Simpan data baru
+Route::post('/detaildoneadmin', [detaildoneadmincontroller::class, 'store'])->name('detaildone.store');
+
+// Update data yang sudah ada
+Route::put('/detaildoneadmin/{id}', [detaildoneadmincontroller::class, 'update'])->name('detaildone.update');
+
+// Hapus data
+Route::delete('/detaildoneadmin/{id}', [detaildoneadmincontroller::class, 'destroy'])->name('detaildone.destroy');
 
 
+Route::get('/laporancetakadmin/filter', [LaporanCetakAdminController::class, 'filter'])
+    ->name('laporancetakadmin.filter');
 Route::get('/laporancetakadmin', [laporancetakadmincontroller::class, 'index'])
     ->name('laporancetakadmin.index');
 Route::get('/laporancetakadmin/download-pdf', [LaporanExportController::class, 'downloadPDF'])

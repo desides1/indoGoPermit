@@ -104,17 +104,20 @@
             @foreach ($dataPerizinan as $item)
             <tr>
                 <td class="user-cell">
-                    <img src="{{ asset('storage/' . $item->user->photo ?? '') }}" alt="User" width="30">
-                    <span>{{ $item->user->name ?? '-' }}</span>
-                </td>
-                <td>{{ $item->permissionType->name ?? '-' }}</td>
+                <img src="{{ isset($item->individual) ? asset('storage/' . ($item->individual->foto_pemohon ?? 'default/user.png')) : asset('default/user.png') }}" alt="User" width="30">
+                <span>{{ $item->individual->name ?? '-' }}</span>
+            </td>
+                <td>{{ $item->request->request_type ?? '-' }}</td>
                 <td class="status {{ $item->status }}">
                     {{ ucfirst(str_replace('_', ' ', $item->status)) }}
                 </td>
                 <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/y') }}</td>
                 <td class="action-buttons">
-                    {{-- <a href="{{ route('dataperizinanadmin.show', $item->id_perizinan) }}" class="detail-btn">Detail</a>
-                    <a href="{{ route('dataperizinanadmin.edit', $item->id_perizinan) }}" class="edit-icon">✏</a> --}}
+                    @if($item->status === 'done')
+                        <a href="{{ route('detaildone.show', $item->id_perizinan) }}" class="detail-btn">Detail</a>
+                    @else
+                        <a href="{{ route('detailprocessadmin.show', $item->id_perizinan) }}" class="detail-btn">Detail</a>
+                    @endif
                 </td>
             </tr>
             @endforeach
@@ -137,60 +140,70 @@
 </div>
 
     <script>
-        function filterTable(status) {
-            const rows = document.querySelectorAll("tbody tr");
-            const buttons = document.querySelectorAll(".tab-btn");
+    function filterTable(status) {
+        const rows = document.querySelectorAll("tbody tr");
+        const buttons = document.querySelectorAll(".tab-btn");
 
-            buttons.forEach(btn => btn.classList.remove("active"));
-            document.querySelector(.tab-btn[data-status="${status}"]).classList.add("active");
+        // Set active tab
+        buttons.forEach(btn => btn.classList.remove("active"));
+        const activeButton = document.querySelector(`.tab-btn[data-status="${status}"]`);
+        if (activeButton) activeButton.classList.add("active");
 
-            rows.forEach(row => {
-                const statusCell = row.querySelector(".status");
-                if (status === "all" || statusCell.classList.contains(status)) {
-                    row.style.display = "";
-                } else {
-                    row.style.display = "none";
-                }
-            });
-        }
+        // Tampilkan/sembunyikan baris berdasarkan status
+        rows.forEach(row => {
+            const statusCell = row.querySelector(".status");
+            if (status === "all" || statusCell.classList.contains(status)) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
 
-        function applyFilters() {
-            const selectedDay = document.getElementById("filter-day").value;
-            const selectedMonth = document.getElementById("filter-month").value;
-            const selectedYear = document.getElementById("filter-year").value;
-            const selectedStatus = document.getElementById("filter-status").value;
+        // Reset dropdown filter supaya tidak tumpang tindih
+        document.getElementById("filter-day").value = "all";
+        document.getElementById("filter-month").value = "all";
+        document.getElementById("filter-year").value = "all";
+        document.getElementById("filter-status").value = "all";
+    }
 
-            const rows = document.querySelectorAll("tbody tr");
+    function applyFilters() {
+        const selectedDay = document.getElementById("filter-day").value;
+        const selectedMonth = document.getElementById("filter-month").value;
+        const selectedYear = document.getElementById("filter-year").value;
+        const selectedStatus = document.getElementById("filter-status").value;
 
-            rows.forEach(row => {
-                const dateParts = row.cells[3].textContent.trim().split("/");
-                const day = dateParts[0];
-                const month = dateParts[1];
-                const year = "20" + dateParts[2];
-                const statusCell = row.querySelector(".status");
+        const rows = document.querySelectorAll("tbody tr");
 
-                const matchDay = selectedDay === "all" || selectedDay === day;
-                const matchMonth = selectedMonth === "all" || selectedMonth === month;
-                const matchYear = selectedYear === "all" || selectedYear === year;
-                const matchStatus = selectedStatus === "all" || statusCell.classList.contains(selectedStatus);
+        rows.forEach(row => {
+            const dateParts = row.cells[3].textContent.trim().split("/");
+            const day = dateParts[0];
+            const month = dateParts[1];
+            const year = "20" + dateParts[2];
+            const statusCell = row.querySelector(".status");
 
-                row.style.display = (matchDay && matchMonth && matchYear && matchStatus) ? "" : "none";
-            });
+            const matchDay = selectedDay === "all" || selectedDay === day;
+            const matchMonth = selectedMonth === "all" || selectedMonth === month;
+            const matchYear = selectedYear === "all" || selectedYear === year;
+            const matchStatus = selectedStatus === "all" || statusCell.classList.contains(selectedStatus);
 
-            document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
-            document.querySelector(.tab-btn[data-status="all"]).classList.add("active");
-        }
+            row.style.display = (matchDay && matchMonth && matchYear && matchStatus) ? "" : "none";
+        });
 
-        function resetFilters() {
-            document.getElementById("filter-day").value = "all";
-            document.getElementById("filter-month").value = "all";
-            document.getElementById("filter-year").value = "all";
-            document.getElementById("filter-status").value = "all";
+        // Reset tab status
+        document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+        const allTab = document.querySelector(`.tab-btn[data-status="all"]`);
+        if (allTab) allTab.classList.add("active");
+    }
 
-            document.querySelectorAll("tbody tr").forEach(row => row.style.display = "");
-            document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
-            document.querySelector(.tab-btn[data-status="all"]).classList.add("active");
-        }
-    </script>
-    </body>
-    </html>
+    function resetFilters() {
+        document.getElementById("filter-day").value = "all";
+        document.getElementById("filter-month").value = "all";
+        document.getElementById("filter-year").value = "all";
+        document.getElementById("filter-status").value = "all";
+
+        document.querySelectorAll("tbody tr").forEach(row => row.style.display = "");
+        document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+        const allTab = document.querySelector(`.tab-btn[data-status="all"]`);
+        if (allTab) allTab.classList.add("active");
+    }
+</script>

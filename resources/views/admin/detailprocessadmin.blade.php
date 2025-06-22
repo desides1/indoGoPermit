@@ -13,6 +13,23 @@
         .active-tab {
             display: block; /* Tampilkan tab aktif */
         }
+        .document-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .document-list li {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+        .view-icon {
+            color: #3490dc;
+            margin-left: 10px;
+        }
+        .text-danger {
+            color: #e3342f;
+        }
     </style>
 </head>
 <body>
@@ -41,13 +58,13 @@
                 <i class="fas fa-pen"></i> <!-- Icon edit -->
             </div>
         </div>
-  <div class="content">
+        <div class="content">
             <h2>Preview Perizinan</h2>
             <div class="profile">
                 <img src="user.jpg" alt="Charlie Kristen">
                 <div class="profile-info">
-                    <h3>Charlie Kristen</h3>
-                    <p>New</p>
+                    <h3>{{ $perizinan->user->username ?? 'Nama Pemohon' }}</h3>
+                    <p>{{ ucfirst($perizinan->request->request_type ?? 'Baru') }}</p>
                 </div>
                 <button class="btn-download">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -58,7 +75,6 @@
                 </button>
             </div>
 
-
             <!-- Tab Navigation -->
             <div class="tab-filter">
                 <button class="tab-button active" onclick="showTab(0)">Data Pemohon</button>
@@ -68,113 +84,156 @@
                 <button class="tab-button" onclick="showTab(4)">Proyek</button>
             </div>
 
-            <!-- Data Pemohon -->
+           <!-- Data Pemohon -->
             <div class="tab-content active-tab">
                 <form class="form-section">
                     <label>Jenis Permohonan *</label>
-                    <input type="text" placeholder="Masukkan jenis permohonan">
-                    <label>Instansi *</label>
-                    <input type="text" placeholder="Masukkan instansi">
-                    <label>Unit *</label>
-                    <input type="text" placeholder="Masukkan unit">
+                    <input type="text" value="{{ $perizinan->permission_type->name ?? '-' }}" readonly>
+
                     <label>Jenis Izin *</label>
-                    <input type="text" placeholder="Masukkan jenis izin">
+                    <input type="text" value="{{ $perizinan->request->request_type ?? '-'}}" readonly>
+
+                    <label>Tipe Izin *</label>
+                    <input type="text" value="{{ $perizinan->permit_type->name ?? '-' }}" readonly>
+
                     <label>Nomor Permohonan</label>
-                    <input type="text" placeholder="Masukkan nomor permohonan">
+                    <input type="text" value="{{ $perizinan->request_number->number ?? '-' }}" readonly>
                 </form>
             </div>
-        <!-- Data Lokasi -->
-        <div class="tab-content" id="lokasi">
-            <img src="peta.png" alt="Peta Lokasi" class="map-image"> <!-- Ganti dengan gambar peta -->
-            <table class="data-table">
-                <tr>
-                    <th>NO.</th>
-                    <th>ALAMAT</th>
-                    <th>LATITUDE</th>
-                    <th>LONGITUDE</th>
-                    <th>AKSI</th>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>Jl. Sudirman, Jakarta</td>
-                    <td>-6.2146</td>
-                    <td>106.8451</td>
-                    <td><button>Edit</button></td>
-                </tr>
-            </table>
-        </div>
 
-        <!-- Data Tipe Pemohon -->
-<div class="tab-content" id="tipe-pemohon">
-    <div class="section-container">
-        <h2 class="section-title">Badan Usaha</h2>
-        <div class="data-grid">
-            <span>Nama Perusahaan</span> <span>No. Registrasi</span>
-            <span>No. NPWP Perusahaan</span> <span>Jenis Perusahaan</span>
-            <span>Bidang Usaha</span> <span>Jenis Usaha</span>
-            <span>Jumlah Pegawai</span> <span>Nilai Investasi</span>
-            <span>No. Telepon</span> <span>Fax</span>
-            <span>Alamat Email</span> <span>Provinsi</span>
-            <span>Kota/Kabupaten</span> <span>Kecamatan</span>
-            <span>Desa/Kelurahan</span> <span>Kode Pos</span>
-            <span>Alamat Lengkap *</span> <span></span>
-        </div>
-    </div>
+            <!-- Data Lokasi -->
+<div class="tab-content" id="lokasi">
+    @if($perizinan->location)
+        @if($perizinan->location->maps)
+            <img src="{{ $perizinan->location->maps }}" alt="Peta Lokasi" class="map-image">
+        @else
+            <div class="map-placeholder">Peta tidak tersedia</div>
+        @endif
+        <table class="data-table">
+            <tr>
+                <th>NO.</th>
+                <th>ALAMAT</th>
+                <th>LATITUDE</th>
+                <th>LONGITUDE</th>
+                <th>AKSI</th>
+            </tr>
+            <tr>
+                <td>{{ $perizinan->location->id_location ?? '-' }}</td>
+                <td>{{ $perizinan->location->detail_address ?? '-' }}</td>
+                <td>{{ number_format($perizinan->location->latitude, 7) ?? '-' }}</td>
+                <td>{{ number_format($perizinan->location->longitude, 7) ?? '-' }}</td>
+                <td><button>Edit</button></td>
+            </tr>
+        </table>
+    @else
+        <p>Data lokasi tidak tersedia</p>
+    @endif
 </div>
 
-<!-- Data Dokumen -->
-<div class="tab-content" id="dokumen">
-    <div class="document-list">
-        <ul>
-            <li>
-                Fotocopy Kartu Tanda Penduduk (KTP) <span class="required">*</span>
-                <i class="fas fa-eye view-icon"></i>
-            </li>
-            <li>
-                Fotocopy KTP pemilik sertifikat (apabila nama pemohon berbeda dengan nama pemilik sertifikat)
-                <i class="fas fa-eye view-icon"></i>
-            </li>
-            <li>
-                Fotocopy IMB lama / KRK lama (jika ada)
-                <i class="fas fa-eye view-icon"></i>
-            </li>
-            <li>
-                Fotocopy Tanda Lunas Pajak Bumi dan Bangunan (PBB) tahun terakhir <span class="required">*</span>
-                <i class="fas fa-eye view-icon"></i>
-            </li>
-            <li>
-                Pertimbangan Teknis Pertahanan (PTP) dari BPN <span class="required">*</span>
-                <i class="fas fa-eye view-icon"></i>
-            </li>
-        </ul>
-    </div>
-</div>
+            <!-- Data Tipe Pemohon -->
+            <div class="tab-content" id="tipe-pemohon">
+                @if($perizinan->individual)
+                    <div class="section-container">
+                        <h2 class="section-title">Perorangan</h2>
+                        <div class="data-grid">
+                            <span>Jenis Identitas: {{ $perizinan->individual->identity_type }}</span>
+                            <span>Nomor Identitas: {{ $perizinan->individual->number_identity }}</span>
+                            <span>Nama: {{ $perizinan->individual->name }}</span>
+                            <span>Jenis Kelamin: {{ $perizinan->individual->gender }}</span>
+                            <span>Tempat Lahir: {{ $perizinan->individual->birthplace }}</span>
+                            <span>Tanggal Lahir: {{ $perizinan->individual->date_of_birth }}</span>
+                            <span>Telepon: {{ $perizinan->individual->telephone_hp }}</span>
+                            <span>Email: {{ $perizinan->individual->email }}</span>
+                            <span>Pekerjaan: {{ $perizinan->individual->job }}</span>
+                            <span>NPWP: {{ $perizinan->individual->npwp_number }}</span>
+                            <span>Provinsi: {{ $perizinan->individual->province->name ?? '-' }}</span>
+                            <span>Kota: {{ $perizinan->individual->city->name ?? '-' }}</span>
+                            <span>Kecamatan: {{ $perizinan->individual->subdistrict }}</span>
+                            <span>Desa: {{ $perizinan->individual->village }}</span>
+                            <span>Kode Pos: {{ $perizinan->individual->postal_code }}</span>
+                            <span>Alamat Lengkap: {{ $perizinan->individual->detail_address }}</span>
+                        </div>
+                    </div>
+                @endif
 
-<!-- Data Proyek -->
-<div class="tab-content" id="proyek">
-    <div class="project-details">
-        <div class="row">
-            <span>Jenis Proyek</span>
-            <span>Target PAD</span>
-        </div>
-        <div class="row">
-            <span>Nilai Investasi</span>
-            <span>Jumlah Tenaga Kerja</span>
-        </div>
-        <div class="row" style="flex-direction: column; align-items: flex-start; gap: 8px; margin-top: 16px;">
-            <label for="catatan">Catatan</label>
-            <textarea id="catatan" placeholder="Tambahkan catatan di sini..." rows="4" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px;"></textarea>
-        </div>
-    </div>
+                @if($perizinan->bussiness_entity)
+                    <div class="section-container">
+                        <h2 class="section-title">Badan Usaha</h2>
+                        <div class="data-grid">
+                            <span>Nama Bisnis: {{ $perizinan->bussiness_entity->name_bussiness }}</span>
+                            <span>Nomor Registrasi: {{ $perizinan->bussiness_entity->registration_number }}</span>
+                            <span>NPWP: {{ $perizinan->bussiness_entity->npwp_number }}</span>
+                            <span>Jenis Bisnis: {{ $perizinan->bussiness_entity->bussiness_type }}</span>
+                            <span>Tipe Perusahaan: {{ $perizinan->bussiness_entity->company_type }}</span>
+                            <span>Jumlah Karyawan: {{ $perizinan->bussiness_entity->total_employee }}</span>
+                            <span>Nilai Investasi: {{ $perizinan->bussiness_entity->investment_value }}</span>
+                            <span>Telepon: {{ $perizinan->bussiness_entity->telephone_hp }}</span>
+                            <span>Email: {{ $perizinan->bussiness_entity->email }}</span>
+                            <span>Fax: {{ $perizinan->bussiness_entity->fax }}</span>
+                            <span>Provinsi: {{ $perizinan->bussiness_entity->province->name ?? '-' }}</span>
+                            <span>Kota: {{ $perizinan->bussiness_entity->city->name ?? '-' }}</span>
+                            <span>Kecamatan: {{ $perizinan->bussiness_entity->subdistrict->name ?? '-' }}</span>
+                            <span>Desa: {{ $perizinan->bussiness_entity->village }}</span>
+                            <span>Kode Pos: {{ $perizinan->bussiness_entity->postal_code }}</span>
+                            <span>Alamat Lengkap: {{ $perizinan->bussiness_entity->detail_address }}</span>
+                        </div>
+                    </div>
+                @endif
+            </div>
 
-    <!-- Status Buttons -->
-    <div class="status-buttons">
-        <button class="status-btn status-process" onclick="window.location.href='/admin/detaildoneadmin'">Done</button>
-    </div>
-</div>
+            <!-- Data Dokumen -->
+            <div class="tab-content" id="dokumen">
+                <div class="document-list">
+                    <ul>
+                        @if($perizinan->documentRequirements && count($perizinan->documentRequirements) > 0)
+                            @foreach($perizinan->documentRequirements as $doc)
+                                <li>
+                                    {{ $doc->requirement->name ?? 'Dokumen' }}
+                                    @if($doc->file_path)
+                                        <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank">
+                                            <i class="fas fa-eye view-icon"></i>
+                                        </a>
+                                    @else
+                                        <span class="text-danger">Belum diunggah</span>
+                                    @endif
+                                </li>
+                            @endforeach
+                        @else
+                            <li>Tidak ada dokumen yang tersedia</li>
+                        @endif
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Data Proyek -->
+            <div class="tab-content" id="proyek">
+                @if($perizinan->project)
+                    <div class="project-details">
+                        <div class="row">
+                            <span>Jenis Proyek: {{ $perizinan->project->project_type }}</span>
+                            <span>Target PAD: {{ $perizinan->project->target_pad }}</span>
+                        </div>
+                        <div class="row">
+                            <span>Nilai Investasi: {{ $perizinan->project->investment_value }}</span>
+                            <span>Jumlah Tenaga Kerja: {{ $perizinan->project->total_employee }}</span>
+                        </div>
+                    </div>
+                @else
+                    <p>Data proyek tidak tersedia</p>
+                @endif
+
+                <!-- Status Buttons -->
+                <div class="status-buttons">
+                    <button id="btn-accepted" class="status-btn status-accepted">Accepted</button>
+                    <button class="status-btn status-process">Process</button>
+                    <button id="btn-rejected" class="status-btn status-rejected">Rejected</button>
+                     <button class="status-btn status-rejected">Revisi</button>
+                    <button class="status-btn status-process">Done</button>
+                </div>
+            </div>
 
 
-             <!-- Buttons -->
+            <!-- Buttons -->
             <div class="buttons" id="buttonsContainer">
                 <button id="backBtn" class="back-btn">← Back</button>
                 <button id="nextBtn" class="next-btn" onclick="changeTab(1)">Next →</button>
@@ -235,5 +294,5 @@
             }
         });
     </script>
-    </body>
-    </html>
+</body>
+</html>
