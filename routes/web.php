@@ -35,6 +35,12 @@ Route::post('/permission', [PermissionTypeController::class, 'validate'])->name(
 Route::get('/addData/{step?}', [FormStepper::class, 'index'])->name('addData');
 Route::post('/addData/store', [FormStepper::class, 'store'])->name('addData.store');
 
+// saveDarft
+// Route::post('/addData/saveDraft', [FormStepper::class, 'saveDraft'])->name('addData.saveDraft');
+
+Route::post('/perizinan/save-draft', [FormStepper::class, 'saveDraft'])->name('perizinan.saveDraft');
+
+
 // For fetching data
 Route::post('/fetch-city', [FormStepper::class, 'fetchCity']);
 Route::post('/fetch-subdistrict', [FormStepper::class, 'fetchSubdistrict']);

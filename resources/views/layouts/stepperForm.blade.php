@@ -77,7 +77,8 @@
                             x-show="currentSteps > 1">Back</button>
 
 
-                        <button type="submit" name="action" value="draft" class="bg-yellow-400 px-4 py-2 rounded">
+                        <button type="submit" class="bg-yellow-400 px-4 py-2 rounded"
+                            onclick="event.preventDefault(); this.form.action='{{ route('perizinan.saveDraft') }}'; this.form.submit();">
                             Save Draft
                         </button>
 

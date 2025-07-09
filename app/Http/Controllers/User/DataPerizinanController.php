@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DataPerizinan;
 // use Illuminate\Http\Request;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Requests\{
     Step1Request,
     Step2GisRequest,
@@ -13,6 +14,8 @@ use App\Http\Requests\{
     Step4ProyekRequest
 };
 use App\Models\Perizinan;
+use App\Models\PermissionType;
+use App\Models\Individual;
 
 class DataPerizinanController extends Controller
 {
@@ -21,7 +24,28 @@ class DataPerizinanController extends Controller
      */
     public function index()
     {
-        return view('user.berandaDataPerizinan', ['permissions' => Perizinan::all()]);
+
+        $individuals = DB::table('individual')
+            ->select('id_individual', 'name')
+            ->get();
+        $permissions = Perizinan::all();
+        $permissionTypes = PermissionType::pluck('name', 'id_permission_type'); // [id => name]
+
+        $drafts = collect();
+        if (session()->has('draftData')) {
+            $drafts = collect([session('draftData')]);
+        }
+
+        return view('user.berandaDataPerizinan', compact('individuals', 'permissions', 'permissionTypes', 'drafts'));
+        // return view(
+
+        //     'user.berandaDataPerizinan',
+        //     [
+        //         'permissions' => Perizinan::all(),
+        //         'individuals' => Individual::all(),
+        //         'permissionTypes' => PermissionType::get(['id_permission_type', 'name']),
+        //     ]
+        // );
     }
 
     /**

@@ -22,6 +22,39 @@
 
     </div>
 
+    {{-- status --}}
+    <div class="relative flex gap-4 bottom-6 left-0 right-0 justify-center">
+        <!-- Card Diproses -->
+        <div class=" top-0 left-0 bg-gradient-to-r from-yellow-400 to-orange-400 text-white p-4 rounded-lg shadow-lg w-48">
+            <div class=" top-2 right-2">
+                <i class="fas fa-expand text-white"></i>
+            </div>
+            <p class="text-lg font-semibold">Di Proses</p>
+            <p class="text-xl font-bold">{{ $diproses }}</p>
+            {{-- <p class="text-xl font-bold">256</p> --}}
+        </div>
+
+        <!-- Card Disetujui -->
+        <div class=" top-0 left-52 bg-gradient-to-r from-green-400 to-teal-400 text-white p-4 rounded-lg shadow-lg w-48">
+            <div class=" top-2 right-2">
+                <i class="fas fa-file-alt text-white"></i>
+            </div>
+            <p class="text-lg font-semibold">Di Setujui</p>
+            <p class="text-xl font-bold">{{ $disetujui }}</p>
+            {{-- <p class="text-xl font-bold">256</p> --}}
+        </div>
+
+        <!-- Card Ditolak -->
+        <div class=" top-0 left-[26rem] bg-gradient-to-r from-red-400 to-pink-400 text-white p-4 rounded-lg shadow-lg w-48">
+            <div class=" top-2 right-2">
+                <i class="fas fa-file-pdf text-white"></i>
+            </div>
+            <p class="text-lg font-semibold">Di Tolak</p>
+            <p class="text-xl font-bold">{{ $ditolak }}</p>
+            {{-- <p class="text-xl font-bold">344</p> --}}
+        </div>
+    </div>
+
     {{-- panduan dan aktivitas --}}
     <div class="grid grid-cols-3 mb-0 mx-24 m-8 gap-4 ">
         <div class="col-span-2 border border-gray-300 rounded-lg bg-white p-4 ">

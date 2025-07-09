@@ -43,7 +43,7 @@ class Perizinan extends Model
 
     public function individual()
     {
-        return $this->belongsTo(Individual::class, 'individual_id_individual', 'id_individual');
+        return $this->belongsTo(Individual::class, 'individual_id', 'id_individual');
     }
 
     public function bussinessEntity()

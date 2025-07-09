@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Individual extends Model
 {
+    protected $table = 'individual';
     protected $primaryKey = 'id_individual';
 
     protected $fillable = [
@@ -25,7 +26,13 @@ class Individual extends Model
         'id_province',
         'id_city',
         'id_subdistric',
+        'perizinan_id',
     ];
+
+    public function perizinan()
+    {
+        return $this->belongsTo(Perizinan::class, 'perizinan_id', 'id_perizinan');
+    }
 
     public function province()
     {

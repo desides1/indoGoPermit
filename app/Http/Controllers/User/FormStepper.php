@@ -26,6 +26,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
 class FormStepper extends Controller
 {
@@ -180,35 +181,12 @@ class FormStepper extends Controller
             Log::info('Individual or Business Entity data stored successfully.');
 
 
-            // dd($request->input('requirement_ids'));
-            // Simpan data Step 4 ke tabel `documents`
-
-            // pan pan
-            // foreach ($request->file('files', []) as $requirementId => $file) {
-            //     $filePath = $file->store('public/pdfs');
-
-            //     $input = $request->input("data.$requirementId", []);
-
-            //     DB::table('document_requirements')->insert([
-            //         'document_requirement_id'  => $requirementId,
-            //         'document_number' => $input['number'] ?? null,
-            //         'start_date'      => $input['start_date'] ?? null,
-            //         'valid_until'     => isset($input['no_expiry']) ? null : ($input['end_date'] ?? null),
-            //         'no_expiry'      => isset($input['no_expiry']),
-            //         'status'          => isset($input['fulfilled']),
-            //         'file_path'       => $filePath,
-            //         'perizinan_id'    => $perizinan, // pastikan variabel ini disiapkan
-            //         'created_at'      => now(),
-            //         'updated_at'      => now(),
-            //     ]);
-            // }
-
             foreach ($request->file('files', []) as $requirementId => $file) {
                 // Pastikan file ada dan valid
                 if (!$file || !$file->isValid()) {
+                    Log::warning("File untuk requirement $requirementId kosong atau tidak valid.");
                     continue;
                 }
-
                 // Simpan file ke storage dan dapatkan path-nya
                 $filePath = $file->store('public/pdfs');
 
@@ -227,33 +205,6 @@ class FormStepper extends Controller
                     'updated_at'              => now(),
                 ]);
             }
-
-
-
-            // foreach ($request->input('requirement_ids', []) as $name => $requirementId) {
-            //     // $fileInputName = $name . '_file';
-            //     $fileInputName = 'file_' . $requirementId;
-            //     $validatedData['documentType'] = $request->input($name . '_documentType');
-
-
-            //     if ($request->hasFile($fileInputName)) {
-            //         $file = $request->file($fileInputName);
-            //         $filePath = $file->store('public/pdfs');
-            //         // $filePath = $request->file('documentFile')->store('public/pdfs');
-            //         $documents = DB::table('document_requirements')->insert([
-            //             'document_number' => $validatedData['documentType'],
-            //             'valid_until' => $validatedData['validUntil'],
-            //             'no_expired' => $validatedData['noExpired'],
-            //             'status' => $validatedData['status'],
-            //             'file_path' => $filePath,
-            //             'requirement_id' => $requirementId,
-            //             // 'user_id' => auth()->id(),
-            //             'perizinan_id' => $perizinan,
-            //             'created_at' => now(),
-            //             'updated_at' => now(),
-            //         ]);
-            //     }
-            // }
 
 
             Log::info('Document Requirements data stored successfully.');
@@ -279,6 +230,14 @@ class FormStepper extends Controller
             Log::error('Error storing data: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Terjadi kesalahan saat menyimpan data.']);
         }
+    }
+
+    public function saveDraft(Request $request)
+    {
+        // Simpan data ke session untuk menyimpan draft
+        session()->put('draftData', $request->all());
+        Log::info('Draft data saved successfully.');
+        return redirect()->back()->with('success', 'Draft berhasil disimpan.');
     }
 
 

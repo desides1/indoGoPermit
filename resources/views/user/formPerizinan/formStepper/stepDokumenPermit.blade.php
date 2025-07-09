@@ -71,7 +71,8 @@
                     <p class="mt-1 text-sm text-gray-500">File harus bertipe PDF</p>
                 </div>
 
-                <button type="button" onclick="document.getElementById('file_').value = ''"
+                <button type="button"
+                    onclick="document.getElementById('file_{{ $requirement->id_requirement }}').value = ''"
                     class="inline-flex items-center gap-2 text-red-600 hover:text-red-700 text-sm font-medium">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
