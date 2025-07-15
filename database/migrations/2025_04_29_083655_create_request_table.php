@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('request', function (Blueprint $table) {
+        Schema::create('requests', function (Blueprint $table) {
             $table->id('id_request');
             $table->enum('request_type', ['Baru', 'Perpanjangan', 'Perubahan', 'Pencabutan']);
             $table->foreignId('request_type_id')

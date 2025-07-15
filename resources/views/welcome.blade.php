@@ -35,31 +35,31 @@ TemplateMo 590 topic listing
 https://templatemo.com/tm-590-topic-listing
 
 -->
-</head>
+<<<<<<< HEAD
+    </head>
 
-<body id="top">
-    <main>
+    <body id="top">
 
-        <nav class="navbar navbar-expand-lg">
-            <div class="container">
-                <a class="navbar-brand" href="index.html">
-                    <img src="images/LOGO 2.png" alt="" style="width: 136px">
-                </a>
+        <main>
 
-                <div class="d-lg-none ms-auto me-4">
-                    <a href="#top" class="navbar-icon bi-person smoothscroll"></a>
-                </div>
+            <nav class="navbar navbar-expand-lg">
+                <div class="container">
+                    <a class="navbar-brand" href="index.html">
+                        <i class="bi-back"></i>
+                        <span>Topic</span>
+                    </a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                    <div class="d-lg-none ms-auto me-4">
+                        <a href="#top" class="navbar-icon bi-person smoothscroll"></a>
+                    </div>
 
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-lg-5 me-lg-auto">
-                        <li class="nav-item">
-                            <a class="nav-link click-scroll" href="#section_1">Beranda</a>
-                        </li>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-lg-5 me-lg-auto">
+                            <li class="nav-item">
 
                         <li class="nav-item">
                             <a class="nav-link click-scroll" href="#section_2">Jenis Perizinan</a>
@@ -149,6 +149,7 @@ https://templatemo.com/tm-590-topic-listing
                             <span>Berbagai jenis perizinan yang kami layani meliputi Perizinan Pendidikan & Lembaga
                                 Kursu, Perizinan Pariwisata dan Hiburan, Perizinan Kesehatan dan Kecantikan dengan
                                 regulasi yang berlaku.</span>
+>>>>>>> e3f7a5525ba945598a89b5ed7c702ad05ff68e31
                     </div>
 
                 </div>
@@ -160,7 +161,6 @@ https://templatemo.com/tm-590-topic-listing
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="design-tab-pane" role="tabpanel"
                                 aria-labelledby="design-tab" tabindex="0">
-                                <div class="row pt-5">
                                     <div class="col-lg-4 col-md-6 col-12 mb-4 mb-lg-0">
                                         <div class="custom-block bg-white shadow-lg">
                                             <a href="topics-detail.html">

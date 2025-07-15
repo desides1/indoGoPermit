@@ -1,0 +1,27 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('data_perizinan', function (Blueprint $table) {
+            $table->id();
+            $table->string('foto_pemohon');
+            $table->string('nama_pemohon');
+            $table->string('jenis_perizinan');
+            $table->enum('status', ['waiting', 'process', 'accepted', 'rejected', 'done']);
+            $table->date('tanggal_pengajuan');
+            $table->string('file_dokumen')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('perizinan');
+    }
+};

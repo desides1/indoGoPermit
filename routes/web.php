@@ -1,6 +1,73 @@
 <?php
 
+use App\Http\Controllers\BerandaAdminController;
+use App\Http\Controllers\dataperizinanadmincontroller;
+use App\Http\Controllers\detailvalidasiadmincontroller;
+use App\Http\Controllers\detailprocessadmincontroller;
+use App\Http\Controllers\detailditerimaadmincontroller;
+use App\Http\Controllers\detailditolakadmincontroller;
+use App\Http\Controllers\detaildoneadmincontroller;
+use App\Http\Controllers\laporancetakadmincontroller;
+use App\Http\Controllers\LaporanExportController;
 use Illuminate\Support\Facades\Route;
+
+// Route::get('/', function () {
+//    // return view('welcome');
+// });
+
+Route::get('/berandaadmin', [BerandaAdminController::class, 'index'])
+    ->name('berandaadmin.index');
+
+Route::get('/dataperizinanadmin', [DataPerizinanAdminController::class, 'index'])
+    ->name('dataperizinanadmin.index');
+Route::post('/dataperizinanadmin/store', [dataperizinanadmincontroller::class, 'store'])
+    ->name('dataperizinanadmin.store');
+Route::get('/dataperizinanadmin/{id}', [DataPerizinanAdminController::class, 'show'])
+    ->name('dataperizinanadmin.show');
+Route::get('/dataperizinanadmin/{id}/edit', [DataPerizinanAdminController::class, 'edit'])
+    ->name('dataperizinanadmin.edit');
+Route::put('/dataperizinanadmin/{id}', [DataPerizinanAdminController::class, 'update'])
+    ->name('dataperizinanadmin.update');
+
+
+Route::get('/detailvalidasiadmin', [detailvalidasiadmincontroller::class, 'index'])
+    ->name('/detailvalidasiadmin.index');
+
+Route::get('/detailprocessadmin/{id}', [detailprocessadmincontroller::class, 'show'])
+    ->name('detailprocessadmin.show');
+
+Route::get('/detailditerimaadmin', [detailditerimaadmincontroller::class, 'index'])
+    ->name('/detailditerimaadmin.index');
+
+Route::get('/detailditolakadmin', [detailditolakadmincontroller::class, 'index'])
+    ->name('/detailditolakadmin.index');
+
+// Tampilkan semua data detail_done
+Route::get('/detaildoneadmin', [detaildoneadmincontroller::class, 'index'])->name('detaildone.index');
+
+// Tampilkan form detail untuk 1 data (bisa untuk edit/tinjau)
+Route::get('/detaildoneadmin/{id}', [detaildoneadmincontroller::class, 'show'])->name('detaildone.show');
+
+// Simpan data baru
+Route::post('/detaildoneadmin', [detaildoneadmincontroller::class, 'store'])->name('detaildone.store');
+
+// Update data yang sudah ada
+Route::put('/detaildoneadmin/{id}', [detaildoneadmincontroller::class, 'update'])->name('detaildone.update');
+
+// Hapus data
+Route::delete('/detaildoneadmin/{id}', [detaildoneadmincontroller::class, 'destroy'])->name('detaildone.destroy');
+
+
+Route::get('/laporancetakadmin/filter', [LaporanCetakAdminController::class, 'filter'])
+    ->name('laporancetakadmin.filter');
+Route::get('/laporancetakadmin', [laporancetakadmincontroller::class, 'index'])
+    ->name('laporancetakadmin.index');
+Route::get('/laporancetakadmin/download-pdf', [LaporanExportController::class, 'downloadPDF'])
+    ->name('laporancetakadmin.downloadpdf');
+Route::get('/laporancetakadmin/print-pdf', [LaporanExportController::class, 'printPDF'])
+    ->name('laporancetakadmin.printpdf');
+
+
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\User\RequestController;
